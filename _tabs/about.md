@@ -1,5 +1,4 @@
 ---
-title: 关于
 icon: fas fa-info-circle
 order: 4
 ---
@@ -16,6 +15,7 @@ order: 4
 - 最佳实践分享
 
 > 所有文档都是本地 AI 操作的总结，不建议直接应用于生产环境。
+{: .prompt-warning }
 
 ## 许可协议
 
