@@ -6,7 +6,7 @@ url: "https://xirain.github.io"
 author: xirain
 
 # Theme settings
-remote_theme: "jeffreytse/jekyll-theme-yat"
+theme: jekyll-theme-yat
 
 # Plugins
 plugins:
