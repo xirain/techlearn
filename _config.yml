@@ -20,6 +20,11 @@ plugins:
 yat:
   date_format: "%Y-%m-%d"
 
+# Banner settings (for home page)
+banner:
+  heading: "Tech Learning Notes"
+  subheading: "记录技术成长的每一步"
+
 # Night mode (auto, manual, or off)
 night_mode: "auto"
 
