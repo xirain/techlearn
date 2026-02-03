@@ -1,9 +1,6 @@
 ---
 layout: home
-title: 首页
-banner:
-  heading: "Tech Learning Notes"
-  subheading: "记录技术成长的每一步"
+title: Home
 ---
 
 # 欢迎来到 Tech Learning Notes
