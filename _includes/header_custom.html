@@ -1,0 +1,50 @@
+<button id="theme-toggle" class="btn" style="margin-left: 1rem;">
+  <span id="theme-toggle-icon">🌙</span>
+</button>
+
+<script>
+(function() {
+  const toggleButton = document.getElementById('theme-toggle');
+  const toggleIcon = document.getElementById('theme-toggle-icon');
+
+  // Get current theme from localStorage or default to dark
+  let currentTheme = localStorage.getItem('theme') || 'dark';
+
+  // Apply theme on page load
+  jtd.setTheme(currentTheme);
+  updateIcon(currentTheme);
+
+  // Toggle theme on button click
+  toggleButton.addEventListener('click', function() {
+    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    jtd.setTheme(currentTheme);
+    localStorage.setItem('theme', currentTheme);
+    updateIcon(currentTheme);
+  });
+
+  function updateIcon(theme) {
+    toggleIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+    toggleButton.setAttribute('aria-label', theme === 'dark' ? '切换到浅色模式' : '切换到深色模式');
+  }
+})();
+</script>
+
+<style>
+  #theme-toggle {
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    transition: transform 0.2s;
+  }
+
+  #theme-toggle:hover {
+    transform: scale(1.1);
+  }
+
+  #theme-toggle:focus {
+    outline: 2px solid var(--btn-primary-color);
+    outline-offset: 2px;
+  }
+</style>

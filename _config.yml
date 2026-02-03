@@ -7,14 +7,8 @@ url: "https://xirain.github.io"
 # Theme settings
 remote_theme: just-the-docs/just-the-docs@v0.10.0
 
-# Color scheme
+# Color scheme (default theme, can be toggled by user)
 color_scheme: dark
-
-# Enable color scheme toggle button
-color_scheme_toggle:
-  enabled: true
-  light_scheme: light
-  dark_scheme: dark
 
 # Search settings
 search_enabled: true
