@@ -145,33 +145,28 @@ permalink: /docs/deepseek-mhc-paper
 
 ## 思维逻辑流程图
 
-```mermaid
+<div class="mermaid">
 graph TD
     A[深度神经网络训练] --> B{梯度连乘问题}
-    B -->|梯度<1| C[梯度消失]
-    B -->|梯度>1| D[梯度爆炸]
-
+    B -->|梯度小于1| C[梯度消失]
+    B -->|梯度大于1| D[梯度爆炸]
     C --> E[传统解决方案]
     D --> E
     E --> F[残差连接 ResNet]
-
     F -->|恒等映射通路| G[系数恒为1]
     G --> H[解决梯度问题]
     F -->|学习残差| I[简化学习目标]
-
     H --> J[字节跳动: 超连接 HC]
     J -->|多通道+可学习矩阵| K[更灵活]
     J -->|矩阵连乘| L[重新引入梯度问题]
-
     L --> M[DeepSeek: MHC]
     M -->|约束到双随机矩阵流形| N[连乘结果可控]
     N --> O[保持灵活性 + 解决梯度问题]
-
     style C fill:#ffcccc
     style D fill:#ffcccc
     style L fill:#ffcccc
     style O fill:#ccffcc
-```
+</div>
 
 ---
 
