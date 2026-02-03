@@ -3,30 +3,42 @@
 </button>
 
 <script>
-(function() {
+document.addEventListener('DOMContentLoaded', function() {
   const toggleButton = document.getElementById('theme-toggle');
   const toggleIcon = document.getElementById('theme-toggle-icon');
 
+  if (!toggleButton || !toggleIcon) return;
+
   // Get current theme from localStorage or default to dark
-  let currentTheme = localStorage.getItem('theme') || 'dark';
+  let currentTheme = localStorage.getItem('jtd-theme') || 'dark';
 
   // Apply theme on page load
-  jtd.setTheme(currentTheme);
+  if (typeof jtd !== 'undefined' && jtd.setTheme) {
+    jtd.setTheme(currentTheme);
+  }
   updateIcon(currentTheme);
 
   // Toggle theme on button click
-  toggleButton.addEventListener('click', function() {
+  toggleButton.addEventListener('click', function(e) {
+    e.preventDefault();
     currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    jtd.setTheme(currentTheme);
-    localStorage.setItem('theme', currentTheme);
+
+    if (typeof jtd !== 'undefined' && jtd.setTheme) {
+      jtd.setTheme(currentTheme);
+    }
+
+    localStorage.setItem('jtd-theme', currentTheme);
     updateIcon(currentTheme);
+
+    console.log('Theme switched to:', currentTheme);
   });
 
   function updateIcon(theme) {
     toggleIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
     toggleButton.setAttribute('aria-label', theme === 'dark' ? '切换到浅色模式' : '切换到深色模式');
+    toggleButton.setAttribute('title', theme === 'dark' ? '切换到浅色模式' : '切换到深色模式');
   }
-})();
+});
 </script>
 
 <style>
