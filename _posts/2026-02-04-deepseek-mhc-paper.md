@@ -1,12 +1,10 @@
 ---
-layout: post
 title: DeepSeek 元旦论文解读 - 流形约束的超连接 (MHC)
-subtitle: 深入解读 DeepSeek 提出的 MHC 技术，用大白话理解深度学习训练稳定性
-categories: 技术内容学习
-tags: [deepseek, mhc, 深度学习, 梯度消失, 残差连接]
-author: xirain
+description: 深入解读 DeepSeek 提出的 MHC 技术，用大白话理解深度学习训练稳定性
 date: 2026-02-04
-permalink: /docs/deepseek-mhc-paper
+categories: [技术学习]
+tags: [deepseek, mhc, 深度学习, 梯度消失, 残差连接]
+mermaid: true
 ---
 
 # 流形约束的超连接 (MHC) 学习笔记
@@ -145,7 +143,7 @@ permalink: /docs/deepseek-mhc-paper
 
 ## 思维逻辑流程图
 
-<div class="mermaid">
+```mermaid
 graph TD
     A[深度神经网络训练] --> B{梯度连乘问题}
     B -->|梯度小于1| C[梯度消失]
@@ -166,7 +164,7 @@ graph TD
     style D fill:#ffcccc
     style L fill:#ffcccc
     style O fill:#ccffcc
-</div>
+```
 
 ---
 

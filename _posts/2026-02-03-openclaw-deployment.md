@@ -1,12 +1,9 @@
 ---
-layout: post
 title: OpenClaw 部署文档
-subtitle: OpenClaw + Discord + 飞书机器人的完整部署流程
-categories: deployment
-tags: [openclaw, discord, feishu, podman, chatbot]
-author: xirain
+description: OpenClaw + Discord + 飞书机器人的完整部署流程
 date: 2026-02-03
-permalink: /docs/openclaw-deployment
+categories: [部署]
+tags: [openclaw, discord, feishu, podman, chatbot]
 ---
 
 # OpenClaw 部署文档
