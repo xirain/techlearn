@@ -25,7 +25,6 @@ defaults:
   home:
     heading: "Tech Learning Notes"
     subheading: "记录技术成长的每一步"
-    banner: "/assets/images/banners/home.jpeg"
 
 # Night mode (auto, manual, or off)
 night_mode: "auto"
