@@ -12,6 +12,9 @@ title: Home
 ### AI & Chatbot
 - [OpenClaw 部署文档]({{ site.baseurl }}/docs/openclaw-deployment) - OpenClaw + Discord + 飞书机器人的完整部署流程
 
+### 技术内容学习
+- [DeepSeek MHC 论文解读]({{ site.baseurl }}/docs/deepseek-mhc-paper) - 流形约束的超连接技术，深度学习训练稳定性解决方案
+
 ---
 
 ## 关于本站
