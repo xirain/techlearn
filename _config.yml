@@ -45,7 +45,6 @@ night_mode: "auto"
 # Navigation menu
 header_pages:
   - index.md
-  - docs/openclaw-deployment.md
 
 # Pagination
 paginate: 5
