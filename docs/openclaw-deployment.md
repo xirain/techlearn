@@ -1,3 +1,11 @@
+---
+layout: default
+title: OpenClaw 部署文档
+nav_order: 2
+description: "OpenClaw + Discord + 飞书机器人的完整部署流程"
+permalink: /docs/openclaw-deployment
+---
+
 # OpenClaw 部署文档
 
 > 记录 OpenClaw + Discord + 飞书机器人的完整部署流程
