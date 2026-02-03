@@ -16,6 +16,19 @@ plugins:
   - jekyll-paginate
   - jekyll-spaceship
 
+# Jekyll Spaceship - Mermaid 支持
+jekyll-spaceship:
+  mermaid-processor:
+    mode: default
+    css:
+      class: mermaid
+    syntax:
+      code: 'mermaid'
+      custom: ['@startmermaid', '@endmermaid']
+    config:
+      theme: default
+    src: https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js
+
 # YAT theme settings
 yat:
   date_format: "%Y-%m-%d"
