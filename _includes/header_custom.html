@@ -3,42 +3,68 @@
 </button>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const toggleButton = document.getElementById('theme-toggle');
-  const toggleIcon = document.getElementById('theme-toggle-icon');
+(function() {
+  function initThemeToggle() {
+    const toggleButton = document.getElementById('theme-toggle');
+    const toggleIcon = document.getElementById('theme-toggle-icon');
 
-  if (!toggleButton || !toggleIcon) return;
-
-  // Get current theme from localStorage or default to dark
-  let currentTheme = localStorage.getItem('jtd-theme') || 'dark';
-
-  // Apply theme on page load
-  if (typeof jtd !== 'undefined' && jtd.setTheme) {
-    jtd.setTheme(currentTheme);
-  }
-  updateIcon(currentTheme);
-
-  // Toggle theme on button click
-  toggleButton.addEventListener('click', function(e) {
-    e.preventDefault();
-    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
-    if (typeof jtd !== 'undefined' && jtd.setTheme) {
-      jtd.setTheme(currentTheme);
+    if (!toggleButton || !toggleIcon) {
+      setTimeout(initThemeToggle, 100);
+      return;
     }
 
-    localStorage.setItem('jtd-theme', currentTheme);
+    // Get current theme from localStorage or check current body class
+    let currentTheme = localStorage.getItem('color-scheme') || 'dark';
+
+    // Update icon on page load
     updateIcon(currentTheme);
 
-    console.log('Theme switched to:', currentTheme);
-  });
+    // Toggle theme on button click
+    toggleButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
 
-  function updateIcon(theme) {
-    toggleIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
-    toggleButton.setAttribute('aria-label', theme === 'dark' ? '切换到浅色模式' : '切换到深色模式');
-    toggleButton.setAttribute('title', theme === 'dark' ? '切换到浅色模式' : '切换到深色模式');
+      // Toggle theme
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+      // Method 1: Try using jtd.setTheme if available
+      if (typeof jtd !== 'undefined' && jtd.setTheme) {
+        jtd.setTheme(currentTheme);
+      }
+
+      // Method 2: Directly manipulate CSS classes
+      document.documentElement.setAttribute('data-color-mode', currentTheme);
+      document.body.setAttribute('data-color-mode', currentTheme);
+
+      // Update all color scheme meta tags
+      const colorSchemeMeta = document.querySelector('meta[name="color-scheme"]');
+      if (colorSchemeMeta) {
+        colorSchemeMeta.setAttribute('content', currentTheme);
+      }
+
+      // Save to localStorage
+      localStorage.setItem('color-scheme', currentTheme);
+
+      // Update icon
+      updateIcon(currentTheme);
+
+      console.log('Theme switched to:', currentTheme);
+    });
+
+    function updateIcon(theme) {
+      toggleIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+      toggleButton.setAttribute('aria-label', theme === 'dark' ? '切换到浅色模式' : '切换到深色模式');
+      toggleButton.setAttribute('title', theme === 'dark' ? '切换到浅色模式' : '切换到深色模式');
+    }
   }
-});
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initThemeToggle);
+  } else {
+    initThemeToggle();
+  }
+})();
 </script>
 
 <style>
