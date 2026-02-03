@@ -10,6 +10,12 @@ remote_theme: just-the-docs/just-the-docs@v0.10.0
 # Color scheme
 color_scheme: dark
 
+# Enable color scheme toggle button
+color_scheme_toggle:
+  enabled: true
+  light_scheme: light
+  dark_scheme: dark
+
 # Search settings
 search_enabled: true
 search:
