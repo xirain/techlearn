@@ -5,6 +5,9 @@ baseurl: "/techlearn"
 url: "https://xirain.github.io"
 author: xirain
 
+# 允许显示未来日期的文章
+future: true
+
 # Theme settings
 theme: jekyll-theme-yat
 
