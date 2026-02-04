@@ -369,9 +369,9 @@ podman exec openclaw node /app/dist/index.js pairing approve feishu <CODE>
 ### 方式二：第三方桥接（旧方案）
 
 > ⚠️ **注意**：此方案已不推荐，建议迁移到官方插件。保留此内容供参考。
+{: .prompt-warning }
 
-<details>
-<summary>点击展开旧方案</summary>
+{% capture legacy_feishu %}
 
 #### 1. 克隆飞书桥接项目
 ```bash
@@ -442,7 +442,9 @@ node setup-service.mjs
 launchctl load ~/Library/LaunchAgents/com.clawdbot.feishu-bridge.plist
 ```
 
-</details>
+{% endcapture %}
+
+{{ legacy_feishu | markdownify }}
 
 ---
 
