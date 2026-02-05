@@ -1,0 +1,30 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import PostList from "@components/PostList.astro";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  title: string;
+  description?: string;
+  posts: CollectionEntry<"posts">[];
+}
+
+const { title, description, posts } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="container-custom py-12">
+    <header class="mb-12">
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">{title}</h1>
+      {description && <p class="text-muted-foreground text-lg">{description}</p>}
+    </header>
+
+    {
+      posts.length > 0 ? (
+        <PostList posts={posts} />
+      ) : (
+        <p class="text-muted-foreground">暂无文章</p>
+      )
+    }
+  </div>
+</BaseLayout>

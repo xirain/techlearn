@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git push)",
+      "Bash(bundle lock --add-platform x86_64-linux)",
+      "Bash(git add _config.yml)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\n启用 Mermaid 图表支持\n\n通过 jekyll-spaceship 插件配置 mermaid-processor\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git add _includes/custom-head.html docs/deepseek-mhc-paper.md)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\n修复 Mermaid 图表渲染\n\n- 添加 custom-head.html 引入 Mermaid JS\n- 将 mermaid 代码块改为 HTML div 格式\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git add _config.yml _posts/)",
+      "Bash(git rm docs/deepseek-mhc-paper.md docs/openclaw-deployment.md)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\n将文档移至 _posts 目录修复文章计数\n\n- 文档从 docs/ 移至 _posts/，使用标准命名格式\n- 更新导航配置\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "Bash(gh search repos \"jekyll theme\" --sort stars --limit 10 --json name,owner,stargazersCount,description,url)",
+      "Bash(gh api repos/cotes2020/jekyll-theme-chirpy/contents/_config.yml --jq '.content')",
+      "Bash(git add .github/workflows/jekyll.yml Gemfile _config.yml _posts/ _tabs/)",
+      "Bash(git rm _includes/custom-head.html index.md)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\n切换到 Chirpy 主题\n\n- 更新 Gemfile 使用 jekyll-theme-chirpy\n- 重写 _config.yml 适配 Chirpy 配置\n- 更新文章 front matter 格式\n- 添加 _tabs/about.md 页面\n- 删除旧的自定义文件\n- Mermaid 使用 Chirpy 原生支持\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(gh api repos/cotes2020/jekyll-theme-chirpy/contents --jq '.[].name')",
+      "Bash(gh api repos/cotes2020/chirpy-starter/contents --jq '.[].name')",
+      "Bash(gh api repos/cotes2020/chirpy-starter/contents/index.html --jq '.content')",
+      "Bash(gh api repos/cotes2020/chirpy-starter/contents/_tabs --jq '.[].name')",
+      "Bash(gh api repos/cotes2020/chirpy-starter/contents/_tabs/about.md --jq '.content')",
+      "Bash(git add index.html _tabs/)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\n添加 Chirpy 必需的页面文件\n\n- 添加 index.html 首页\n- 添加分类、标签、归档导航页面\n- 更新关于页面格式\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(gh api repos/cotes2020/chirpy-starter/contents/_tabs/categories.md --jq '.content')",
+      "Bash(gh api repos/cotes2020/chirpy-starter/contents/_tabs/tags.md --jq '.content')",
+      "Bash(gh api repos/cotes2020/chirpy-starter/contents/_tabs/archives.md --jq '.content')",
+      "Bash(git add _tabs/)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\n修复分类、标签、归档页面 layout\n\n添加正确的 layout 属性：categories, tags, archives\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
+    ]
+  }
+}

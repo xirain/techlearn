@@ -1,0 +1,14 @@
+---
+import PostListLayout from "@layouts/PostListLayout.astro";
+import { getCollection } from "astro:content";
+
+// Get all published posts sorted by date
+const posts = (await getCollection("posts", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDatetime.valueOf() - a.data.pubDatetime.valueOf());
+---
+
+<PostListLayout
+  title="所有文章"
+  description="浏览所有技术文章和学习笔记"
+  posts={posts}
+/>

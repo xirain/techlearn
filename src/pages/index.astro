@@ -1,0 +1,48 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import PostList from "@components/PostList.astro";
+import { getCollection } from "astro:content";
+import { SITE } from "@/config";
+
+// Get all published posts sorted by date
+const posts = (await getCollection("posts", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDatetime.valueOf() - a.data.pubDatetime.valueOf())
+  .slice(0, 5);
+---
+
+<BaseLayout>
+  <div class="container-custom py-12">
+    <!-- Hero Section -->
+    <section class="mb-16">
+      <div class="max-w-2xl">
+        <h1 class="text-4xl sm:text-5xl font-bold mb-6 leading-tight">
+          <span class="gradient-text">{SITE.title}</span>
+        </h1>
+        <p class="text-lg text-muted-foreground">
+          {SITE.desc}
+        </p>
+      </div>
+    </section>
+
+    <!-- Recent Posts Section -->
+    <section>
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-2xl font-bold">最新文章</h2>
+        <a
+          href={`${import.meta.env.BASE_URL}/posts`}
+          class="text-sm text-muted-foreground hover:text-primary transition-colors link-hover"
+        >
+          查看全部 &rarr;
+        </a>
+      </div>
+
+      {
+        posts.length > 0 ? (
+          <PostList posts={posts} />
+        ) : (
+          <p class="text-muted-foreground">暂无文章</p>
+        )
+      }
+    </section>
+  </div>
+</BaseLayout>

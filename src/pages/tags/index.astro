@@ -1,0 +1,47 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+// Get all unique tags with their post counts
+const posts = await getCollection("posts", ({ data }) => !data.draft);
+const tagCounts = new Map<string, number>();
+
+posts.forEach((post) => {
+  post.data.tags.forEach((tag) => {
+    tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+  });
+});
+
+// Sort tags by count (descending)
+const sortedTags = Array.from(tagCounts.entries()).sort((a, b) => b[1] - a[1]);
+---
+
+<BaseLayout title="标签" description="按标签浏览所有文章">
+  <div class="container-custom py-12">
+    <header class="mb-12">
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">标签</h1>
+      <p class="text-muted-foreground text-lg">
+        共 {sortedTags.length} 个标签
+      </p>
+    </header>
+
+    <div class="flex flex-wrap gap-4">
+      {
+        sortedTags.map(([tag, count], index) => (
+          <a
+            href={`${import.meta.env.BASE_URL}/tags/${tag}`}
+            class="group animate-fade-in opacity-0 inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all"
+            style={`animation-delay: ${index * 0.05}s`}
+          >
+            <span class="text-card-foreground group-hover:text-primary transition-colors font-medium">
+              #{tag}
+            </span>
+            <span class="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+              {count}
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>

@@ -1,9 +1,24 @@
+# Astro build output
+dist/
+.astro/
+
+# Dependencies
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment
+.env
+.env.local
+.env.production
+
 # macOS
 .DS_Store
 .AppleDouble
 .LSOverride
-
-# Thumbnails
 ._*
 
 # Files that might appear in the root of a volume

@@ -1,0 +1,120 @@
+---
+import { SITE, NAV_ITEMS } from "@/config";
+import ThemeToggle from "./ThemeToggle.astro";
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-sm">
+  <div class="container-custom">
+    <nav class="flex h-16 items-center justify-between">
+      <!-- Logo -->
+      <a
+        href={`${import.meta.env.BASE_URL}`}
+        class="flex items-center gap-2 font-semibold text-lg hover:text-primary transition-colors"
+      >
+        <span class="gradient-text">{SITE.title}</span>
+      </a>
+
+      <!-- Navigation Links -->
+      <div class="flex items-center gap-6">
+        <ul class="hidden sm:flex items-center gap-6">
+          {
+            NAV_ITEMS.map((item) => {
+              const href = item.href === "/" 
+                ? import.meta.env.BASE_URL 
+                : `${import.meta.env.BASE_URL}/${item.href.slice(1)}`;
+              const isActive = currentPath === href || 
+                (item.href !== "/" && currentPath.startsWith(href));
+              
+              return (
+                <li>
+                  <a
+                    href={href}
+                    class:list={[
+                      "text-sm font-medium transition-colors link-hover",
+                      isActive
+                        ? "text-primary"
+                        : "text-muted-foreground hover:text-foreground",
+                    ]}
+                  >
+                    {item.title}
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+
+        <!-- Theme Toggle -->
+        <ThemeToggle />
+
+        <!-- Mobile Menu Button -->
+        <button
+          id="mobile-menu-btn"
+          class="sm:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
+          aria-label="Toggle menu"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="4" x2="20" y1="12" y2="12"></line>
+            <line x1="4" x2="20" y1="6" y2="6"></line>
+            <line x1="4" x2="20" y1="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div
+    id="mobile-menu"
+    class="hidden sm:hidden border-t border-border bg-background"
+  >
+    <ul class="container-custom py-4 space-y-2">
+      {
+        NAV_ITEMS.map((item) => {
+          const href = item.href === "/" 
+            ? import.meta.env.BASE_URL 
+            : `${import.meta.env.BASE_URL}${item.href.slice(1)}`;
+          const isActive = currentPath === href || 
+            (item.href !== "/" && currentPath.startsWith(href));
+          
+          return (
+            <li>
+              <a
+                href={href}
+                class:list={[
+                  "block py-2 text-sm font-medium transition-colors",
+                  isActive
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-foreground",
+                ]}
+              >
+                {item.title}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</header>
+
+<script>
+  const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+  const mobileMenu = document.getElementById("mobile-menu");
+
+  mobileMenuBtn?.addEventListener("click", () => {
+    mobileMenu?.classList.toggle("hidden");
+  });
+</script>

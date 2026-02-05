@@ -1,0 +1,37 @@
+---
+import PostListLayout from "@layouts/PostListLayout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts", ({ data }) => !data.draft);
+  
+  // Get all unique tags
+  const tags = new Set<string>();
+  posts.forEach((post) => {
+    post.data.tags.forEach((tag) => tags.add(tag));
+  });
+
+  return Array.from(tags).map((tag) => ({
+    params: { tag },
+    props: {
+      tag,
+      posts: posts
+        .filter((post) => post.data.tags.includes(tag))
+        .sort((a, b) => b.data.pubDatetime.valueOf() - a.data.pubDatetime.valueOf()),
+    },
+  }));
+}
+
+interface Props {
+  tag: string;
+  posts: Awaited<ReturnType<typeof getCollection<"posts">>>;
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<PostListLayout
+  title={`#${tag}`}
+  description={`包含标签 "${tag}" 的所有文章`}
+  posts={posts}
+/>

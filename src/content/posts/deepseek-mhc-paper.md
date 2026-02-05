@@ -1,10 +1,8 @@
 ---
 title: DeepSeek 元旦论文解读 - 流形约束的超连接 (MHC)
 description: 深入解读 DeepSeek 提出的 MHC 技术，用大白话理解深度学习训练稳定性
-date: 2026-02-04
-categories: [技术学习]
+pubDatetime: 2026-02-04
 tags: [deepseek, mhc, 深度学习, 梯度消失, 残差连接]
-mermaid: true
 ---
 
 # 流形约束的超连接 (MHC) 学习笔记

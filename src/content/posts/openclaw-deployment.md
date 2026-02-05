@@ -1,8 +1,7 @@
 ---
 title: OpenClaw 部署文档
 description: OpenClaw + Discord + 飞书机器人的完整部署流程
-date: 2026-02-03
-categories: [部署]
+pubDatetime: 2026-02-03
 tags: [openclaw, discord, feishu, podman, chatbot]
 ---
 
@@ -369,9 +368,6 @@ podman exec openclaw node /app/dist/index.js pairing approve feishu <CODE>
 ### 方式二：第三方桥接（旧方案）
 
 > ⚠️ **注意**：此方案已不推荐，建议迁移到官方插件。保留此内容供参考。
-{: .prompt-warning }
-
-{% capture legacy_feishu %}
 
 #### 1. 克隆飞书桥接项目
 ```bash
@@ -441,10 +437,6 @@ cd ~/feishu-openclaw
 node setup-service.mjs
 launchctl load ~/Library/LaunchAgents/com.clawdbot.feishu-bridge.plist
 ```
-
-{% endcapture %}
-
-{{ legacy_feishu | markdownify }}
 
 ---
 

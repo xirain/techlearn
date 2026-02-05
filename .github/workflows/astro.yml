@@ -1,4 +1,4 @@
-name: Build and Deploy Jekyll Site
+name: Build and Deploy Astro Site
 
 on:
   push:
@@ -24,26 +24,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          ruby-version: '3.3'
-          bundler-cache: true
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v4
 
-      - name: Build with Jekyll
-        run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
-        env:
-          JEKYLL_ENV: production
+      - name: Build with Astro
+        run: npm run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
 
   deploy:
     environment:

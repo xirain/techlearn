@@ -1,0 +1,199 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light theme - Organic/Warm palette inspired by liruifengv.com */
+    --background: 253 251 247; /* Warm cream #fdfbf7 */
+    --foreground: 41 37 36; /* Dark brown #292524 */
+    
+    --primary: 34 87 59; /* Forest green #22573b */
+    --primary-foreground: 255 255 255;
+    
+    --secondary: 245 241 235; /* Lighter cream #f5f1eb */
+    --secondary-foreground: 41 37 36;
+    
+    --muted: 241 237 231; /* Muted cream #f1ede7 */
+    --muted-foreground: 115 109 101; /* Muted brown #736d65 */
+    
+    --accent: 180 83 55; /* Terracotta #b45337 */
+    --accent-foreground: 255 255 255;
+    
+    --border: 225 220 212; /* Light brown border #e1dcd4 */
+    
+    --card: 255 255 255;
+    --card-foreground: 41 37 36;
+  }
+
+  .theme-dark {
+    --background: 28 25 23; /* Dark brown #1c1917 */
+    --foreground: 250 250 249; /* Light gray #fafaf9 */
+    
+    --primary: 74 137 96; /* Lighter forest green #4a8960 */
+    --primary-foreground: 255 255 255;
+    
+    --secondary: 41 37 36; /* Dark brown #292524 */
+    --secondary-foreground: 250 250 249;
+    
+    --muted: 41 37 36; /* Same dark brown */
+    --muted-foreground: 168 162 158; /* Muted light #a8a29e */
+    
+    --accent: 217 119 87; /* Lighter terracotta #d97757 */
+    --accent-foreground: 255 255 255;
+    
+    --border: 68 64 60; /* Dark border #44403c */
+    
+    --card: 41 37 36;
+    --card-foreground: 250 250 249;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Selection */
+  ::selection {
+    @apply bg-primary/20 text-foreground;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/30 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/50;
+  }
+}
+
+@layer components {
+  /* Card hover effect */
+  .card-hover {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .card-hover:hover {
+    @apply -translate-y-1 shadow-lg;
+    box-shadow: 0 10px 40px -15px rgb(var(--primary) / 0.15);
+  }
+
+  /* Link underline animation */
+  .link-hover {
+    @apply relative;
+  }
+
+  .link-hover::after {
+    content: "";
+    @apply absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300;
+  }
+
+  .link-hover:hover::after {
+    @apply w-full;
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  }
+
+  /* Container */
+  .container-custom {
+    @apply mx-auto max-w-4xl px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Prose customization for articles */
+  .prose-custom {
+    @apply prose prose-stone dark:prose-invert max-w-none;
+  }
+
+  .prose-custom h1,
+  .prose-custom h2,
+  .prose-custom h3,
+  .prose-custom h4 {
+    @apply font-bold tracking-tight;
+  }
+
+  .prose-custom h2 {
+    @apply mt-12 mb-6 pb-2 border-b border-border;
+  }
+
+  .prose-custom h3 {
+    @apply mt-8 mb-4;
+  }
+
+  .prose-custom a {
+    @apply text-primary no-underline hover:underline;
+  }
+
+  .prose-custom blockquote {
+    @apply border-l-4 border-primary/50 bg-muted/50 py-1 not-italic;
+  }
+
+  .prose-custom code:not(pre code) {
+    @apply bg-muted px-1.5 py-0.5 rounded text-sm font-normal;
+  }
+
+  .prose-custom pre {
+    @apply bg-muted border border-border rounded-lg;
+  }
+
+  .prose-custom img {
+    @apply rounded-lg border border-border;
+  }
+
+  .prose-custom table {
+    @apply text-sm;
+  }
+
+  .prose-custom th {
+    @apply bg-muted font-semibold;
+  }
+
+  .prose-custom td,
+  .prose-custom th {
+    @apply border border-border px-4 py-2;
+  }
+}
+
+@layer utilities {
+  /* Fade in animation */
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Stagger animation delay */
+  .stagger-1 { animation-delay: 0.1s; }
+  .stagger-2 { animation-delay: 0.2s; }
+  .stagger-3 { animation-delay: 0.3s; }
+  .stagger-4 { animation-delay: 0.4s; }
+  .stagger-5 { animation-delay: 0.5s; }
+}
