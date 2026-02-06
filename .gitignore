@@ -37,6 +37,9 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# Claude Code
+.claude/settings.local.json
+
 # Editor directories and files
 .vscode/
 .idea/
