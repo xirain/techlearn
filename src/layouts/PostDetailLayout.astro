@@ -1,14 +1,22 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import Tag from "@components/Tag.astro";
+import TOC from "@components/TOC.astro";
+import CopyCodeButton from "@components/CopyCodeButton.astro";
+import Giscus from "@components/Giscus.astro";
+import SeriesNav from "@components/SeriesNav.astro";
 import type { CollectionEntry } from "astro:content";
+import type { MarkdownHeading } from "astro";
+import { getReadingTime } from "@/utils/readingTime";
 
 interface Props {
   post: CollectionEntry<"posts">;
+  headings?: MarkdownHeading[];
 }
 
-const { post } = Astro.props;
+const { post, headings = [] } = Astro.props;
 const { title, description, pubDatetime, tags } = post.data;
+const readingTime = getReadingTime(post.body);
 
 function formatDate(date: Date): string {
   return date.toLocaleDateString("zh-CN", {
@@ -19,17 +27,18 @@ function formatDate(date: Date): string {
 }
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} ogImage={`${import.meta.env.BASE_URL}/og/${post.slug}.png`}>
   <article class="container-custom py-12">
     <!-- Article Header -->
     <header class="mb-12 pb-8 border-b border-border">
       <div class="max-w-3xl">
-        <time
-          datetime={pubDatetime.toISOString()}
-          class="text-sm text-muted-foreground"
-        >
-          {formatDate(pubDatetime)}
-        </time>
+        <div class="flex items-center gap-3 text-sm text-muted-foreground">
+          <time datetime={pubDatetime.toISOString()}>
+            {formatDate(pubDatetime)}
+          </time>
+          <span>&middot;</span>
+          <span>阅读约 {readingTime}</span>
+        </div>
 
         <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold mt-4 mb-6 leading-tight">
           {title}
@@ -45,9 +54,28 @@ function formatDate(date: Date): string {
       </div>
     </header>
 
+    <!-- Series Navigation -->
+    <div class="max-w-3xl">
+      <SeriesNav currentPost={post} />
+    </div>
+
+    <!-- Table of Contents -->
+    {headings.length > 0 && (
+      <div class="max-w-3xl">
+        <TOC headings={headings} />
+      </div>
+    )}
+
     <!-- Article Content -->
     <div class="prose-custom max-w-3xl">
       <slot />
+    </div>
+
+    <CopyCodeButton />
+
+    <!-- Comments -->
+    <div class="max-w-3xl">
+      <Giscus />
     </div>
 
     <!-- Back to Posts -->

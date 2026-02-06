@@ -157,6 +157,7 @@
 
   .prose-custom img {
     @apply rounded-lg border border-border;
+    content-visibility: auto;
   }
 
   .prose-custom table {

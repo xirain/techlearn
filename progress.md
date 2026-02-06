@@ -60,24 +60,34 @@
 - [x] 修复 `tailwind.config.js` ESM 兼容性 (`require` → `import`)
 - [x] 修复 `BASE_URL` 路径拼接问题（缺少 `/`）
 
+### 10. 新增页面
+- [x] `src/pages/about.astro` - 关于页面，导航栏已添加"关于"入口
+- [x] `src/pages/404.astro` - 404 错误页面
+- [x] `src/pages/rss.xml.ts` - RSS 订阅（`@astrojs/rss`）
+- [x] `src/pages/search.astro` + `src/pages/search.json.ts` - 全文搜索（Fuse.js）
+
+### 11. 新增组件
+- [x] `src/components/TOC.astro` - 文章目录组件（h2/h3 层级）
+- [x] `src/components/CopyCodeButton.astro` - 代码块复制按钮
+- [x] `src/components/Giscus.astro` - Giscus 评论系统（需配置 repo-id）
+- [x] `src/components/SeriesNav.astro` - 文章系列/专栏导航
+
+### 12. 功能增强
+- [x] 文章阅读时间估算 (`src/utils/readingTime.ts`，支持中文字数统计)
+- [x] OG Image 自动生成 (`src/pages/og/[slug].png.ts`，satori + sharp)
+- [x] 性能优化（Astro prefetch hover 策略、DNS 预解析、`content-visibility`）
+- [x] 导航栏搜索图标入口
+- [x] RSS `<link>` 标签自动注入
+- [x] Content schema 新增 `series` / `seriesOrder` 字段
+
 ## 待完成 🚧
 
-### 高优先级
-- [ ] 添加 About 页面 (`src/pages/about.astro`)
-- [ ] 添加 404 页面 (`src/pages/404.astro`)
-- [ ] RSS 订阅 (`src/pages/rss.xml.ts`)
+（暂无）
 
-### 中优先级
-- [ ] 文章目录 (TOC) 组件
-- [ ] 代码块复制按钮
-- [ ] 文章阅读时间估算
-- [ ] 搜索功能
+## 配置提醒
 
-### 低优先级
-- [ ] Giscus 评论系统
-- [ ] 文章系列/专栏功能
-- [ ] OG Image 自动生成
-- [ ] 性能优化（图片懒加载、预加载）
+- **Giscus 评论**：需在 [giscus.app](https://giscus.app) 获取 `data-repo-id` 和 `data-category-id`，填入 `src/components/Giscus.astro`
+- **文章系列**：在文章 frontmatter 中添加 `series: "系列名"` 和 `seriesOrder: 1` 即可自动关联
 
 ## 技术栈
 
@@ -88,6 +98,10 @@
 | 内容 | MDX + Content Collections |
 | 部署 | GitHub Pages + Actions |
 | 字体 | Inter + JetBrains Mono |
+| 搜索 | Fuse.js（客户端模糊搜索） |
+| OG 图 | satori + sharp |
+| 评论 | Giscus |
+| RSS | @astrojs/rss |
 
 ## 本地开发
 
@@ -111,16 +125,33 @@ npm run preview
 ```
 techlearn/
 ├── src/
-│   ├── components/     # UI 组件
-│   ├── layouts/        # 页面布局
-│   ├── pages/          # 路由页面
-│   ├── content/        # Markdown 内容
-│   │   └── posts/      # 文章
-│   ├── styles/         # 全局样式
-│   └── config.ts       # 站点配置
-├── public/             # 静态资源
-├── astro.config.mjs    # Astro 配置
-├── tailwind.config.js  # Tailwind 配置
+│   ├── components/          # UI 组件
+│   │   ├── Nav.astro
+│   │   ├── Footer.astro
+│   │   ├── ThemeToggle.astro
+│   │   ├── PostList.astro
+│   │   ├── Tag.astro
+│   │   ├── TOC.astro
+│   │   ├── CopyCodeButton.astro
+│   │   ├── Giscus.astro
+│   │   └── SeriesNav.astro
+│   ├── layouts/             # 页面布局
+│   ├── pages/               # 路由页面
+│   │   ├── about.astro
+│   │   ├── 404.astro
+│   │   ├── search.astro
+│   │   ├── rss.xml.ts
+│   │   ├── search.json.ts
+│   │   └── og/[slug].png.ts
+│   ├── content/             # Markdown 内容
+│   │   └── posts/
+│   ├── utils/               # 工具函数
+│   │   └── readingTime.ts
+│   ├── styles/              # 全局样式
+│   └── config.ts            # 站点配置
+├── public/                  # 静态资源
+├── astro.config.mjs         # Astro 配置
+├── tailwind.config.js       # Tailwind 配置
 └── package.json
 ```
 

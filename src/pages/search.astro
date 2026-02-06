@@ -1,0 +1,99 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="搜索" description="搜索文章">
+  <div class="container-custom py-12">
+    <h1 class="text-3xl font-bold mb-8">
+      <span class="gradient-text">搜索</span>
+    </h1>
+
+    <div class="mb-8">
+      <input
+        type="text"
+        id="search-input"
+        placeholder="输入关键词搜索文章..."
+        class="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+        autofocus
+      />
+    </div>
+
+    <div id="search-results" class="space-y-4"></div>
+  </div>
+</BaseLayout>
+
+<script>
+  import Fuse from "fuse.js";
+
+  interface SearchItem {
+    title: string;
+    description: string;
+    tags: string[];
+    slug: string;
+  }
+
+  async function initSearch() {
+    const input = document.getElementById("search-input") as HTMLInputElement;
+    const resultsContainer = document.getElementById("search-results")!;
+    const baseUrl = import.meta.env.BASE_URL;
+
+    const res = await fetch(`${baseUrl}/search.json`);
+    const posts: SearchItem[] = await res.json();
+
+    const fuse = new Fuse(posts, {
+      keys: [
+        { name: "title", weight: 2 },
+        { name: "description", weight: 1 },
+        { name: "tags", weight: 1.5 },
+      ],
+      threshold: 0.4,
+      includeScore: true,
+    });
+
+    // Check URL params for initial query
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get("q");
+    if (q) {
+      input.value = q;
+      performSearch(q);
+    }
+
+    input.addEventListener("input", (e) => {
+      const query = (e.target as HTMLInputElement).value;
+      performSearch(query);
+    });
+
+    function performSearch(query: string) {
+      if (!query.trim()) {
+        resultsContainer.innerHTML =
+          '<p class="text-muted-foreground">输入关键词开始搜索</p>';
+        return;
+      }
+
+      const results = fuse.search(query);
+
+      if (results.length === 0) {
+        resultsContainer.innerHTML =
+          '<p class="text-muted-foreground">未找到相关文章</p>';
+        return;
+      }
+
+      resultsContainer.innerHTML = results
+        .map(
+          ({ item }) => `
+        <a href="${baseUrl}/posts/${item.slug}" class="block group rounded-xl border border-border bg-card p-5 card-hover transition-all">
+          <h2 class="text-lg font-semibold group-hover:text-primary transition-colors mb-2">${item.title}</h2>
+          <p class="text-sm text-muted-foreground line-clamp-2">${item.description}</p>
+          <div class="flex flex-wrap gap-1.5 mt-3">
+            ${item.tags.map((t: string) => `<span class="px-2 py-0.5 text-xs rounded-full bg-secondary text-secondary-foreground">#${t}</span>`).join("")}
+          </div>
+        </a>
+      `
+        )
+        .join("");
+    }
+  }
+
+  initSearch();
+  document.addEventListener("astro:after-swap", initSearch);
+</script>

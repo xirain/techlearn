@@ -8,7 +8,12 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "astro": "^5.0.2"
+    "@astrojs/rss": "^4.0.15",
+    "astro": "^5.0.2",
+    "fuse.js": "^7.1.0",
+    "satori": "^0.19.1",
+    "satori-html": "^0.3.2",
+    "sharp": "^0.34.5"
   },
   "devDependencies": {
     "@astrojs/mdx": "^4.0.1",

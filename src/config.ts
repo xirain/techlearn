@@ -13,4 +13,5 @@ export const NAV_ITEMS = [
   { title: "首页", href: "/" },
   { title: "文章", href: "/posts" },
   { title: "标签", href: "/tags" },
+  { title: "关于", href: "/about" },
 ];

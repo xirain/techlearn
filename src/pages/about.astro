@@ -1,0 +1,37 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@/config";
+---
+
+<BaseLayout title="关于" description="关于本站和作者">
+  <div class="container-custom py-12">
+    <div class="max-w-2xl">
+      <h1 class="text-3xl sm:text-4xl font-bold mb-8">
+        <span class="gradient-text">关于</span>
+      </h1>
+
+      <div class="prose-custom">
+        <h2>关于本站</h2>
+        <p>
+          <strong>{SITE.title}</strong> 是一个个人技术文档库，记录部署、配置和开发过程中的经验与总结。
+        </p>
+        <p>
+          所有文档均为本地 AI 操作的总结，不建议直接应用于生产环境。本站旨在记录学习过程，供个人参考和回顾。
+        </p>
+
+        <h2>技术栈</h2>
+        <ul>
+          <li><strong>框架</strong>：<a href="https://astro.build" target="_blank" rel="noopener noreferrer">Astro</a></li>
+          <li><strong>样式</strong>：<a href="https://tailwindcss.com" target="_blank" rel="noopener noreferrer">Tailwind CSS</a></li>
+          <li><strong>部署</strong>：GitHub Pages + GitHub Actions</li>
+          <li><strong>内容</strong>：Markdown + Content Collections</li>
+        </ul>
+
+        <h2>联系方式</h2>
+        <p>
+          GitHub：<a href="https://github.com/xirain" target="_blank" rel="noopener noreferrer">@xirain</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

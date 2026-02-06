@@ -1,0 +1,35 @@
+---
+/**
+ * Giscus comment component.
+ * Configure at https://giscus.app/ and update the attributes below.
+ * Requires enabling GitHub Discussions on the repo.
+ */
+---
+
+<section class="mt-16 pt-8 border-t border-border">
+  <h2 class="text-xl font-bold mb-6">评论</h2>
+  <div id="giscus-container">
+    <script
+      is:inline
+      src="https://giscus.app/client.js"
+      data-repo="xirain/techlearn"
+      data-repo-id=""
+      data-category="Announcements"
+      data-category-id=""
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="zh-CN"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async
+    ></script>
+  </div>
+  <p class="text-xs text-muted-foreground mt-4">
+    评论系统基于 <a href="https://giscus.app" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">Giscus</a>，
+    需要启用仓库的 GitHub Discussions 后配置 repo-id 和 category-id。
+  </p>
+</section>

@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import Tag from "./Tag.astro";
+import { getReadingTime } from "@/utils/readingTime";
 
 interface Props {
   posts: CollectionEntry<"posts">[];
@@ -32,13 +33,14 @@ function formatDate(date: Date): string {
           />
           
           <div class="flex flex-col gap-3">
-            <!-- Date -->
-            <time
-              datetime={post.data.pubDatetime.toISOString()}
-              class="text-sm text-muted-foreground"
-            >
-              {formatDate(post.data.pubDatetime)}
-            </time>
+            <!-- Date & Reading Time -->
+            <div class="flex items-center gap-2 text-sm text-muted-foreground">
+              <time datetime={post.data.pubDatetime.toISOString()}>
+                {formatDate(post.data.pubDatetime)}
+              </time>
+              <span>&middot;</span>
+              <span>{getReadingTime(post.body)}</span>
+            </div>
 
             <!-- Title -->
             <h2 class="text-xl font-semibold text-card-foreground group-hover:text-primary transition-colors">
