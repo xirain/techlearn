@@ -3,7 +3,7 @@ import BaseLayout from "./BaseLayout.astro";
 import Tag from "@components/Tag.astro";
 import TOC from "@components/TOC.astro";
 import CopyCodeButton from "@components/CopyCodeButton.astro";
-import Giscus from "@components/Giscus.astro";
+import Mermaid from "@components/Mermaid.astro";
 import SeriesNav from "@components/SeriesNav.astro";
 import type { CollectionEntry } from "astro:content";
 import type { MarkdownHeading } from "astro";
@@ -17,6 +17,7 @@ interface Props {
 const { post, headings = [] } = Astro.props;
 const { title, description, pubDatetime, tags } = post.data;
 const readingTime = getReadingTime(post.body);
+const hasToc = headings.filter((h) => h.depth >= 2 && h.depth <= 3).length > 0;
 
 function formatDate(date: Date): string {
   return date.toLocaleDateString("zh-CN", {
@@ -28,9 +29,9 @@ function formatDate(date: Date): string {
 ---
 
 <BaseLayout title={title} description={description} ogImage={`${import.meta.env.BASE_URL}/og/${post.slug}.png`}>
-  <article class="container-custom py-12">
+  <article class="py-12">
     <!-- Article Header -->
-    <header class="mb-12 pb-8 border-b border-border">
+    <header class="mb-12 pb-8 border-b border-border container-custom">
       <div class="max-w-3xl">
         <div class="flex items-center gap-3 text-sm text-muted-foreground">
           <time datetime={pubDatetime.toISOString()}>
@@ -54,52 +55,54 @@ function formatDate(date: Date): string {
       </div>
     </header>
 
-    <!-- Series Navigation -->
-    <div class="max-w-3xl">
-      <SeriesNav currentPost={post} />
-    </div>
+    <!-- Two-column layout -->
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class:list={["flex gap-10", hasToc ? "xl:flex-row" : ""]}>
+        <!-- Left TOC sidebar (xl screens only) -->
+        {hasToc && (
+          <aside class="hidden xl:block w-56 flex-shrink-0">
+            <TOC headings={headings} />
+          </aside>
+        )}
 
-    <!-- Table of Contents -->
-    {headings.length > 0 && (
-      <div class="max-w-3xl">
-        <TOC headings={headings} />
+        <!-- Main content column -->
+        <div class="max-w-3xl mx-auto min-w-0 flex-1">
+          <!-- Series Navigation -->
+          <SeriesNav currentPost={post} />
+
+          <!-- Article Content -->
+          <div class="prose-custom">
+            <slot />
+          </div>
+
+          <CopyCodeButton />
+          <Mermaid />
+
+          <!-- Back to Posts -->
+          <div class="mt-16 pt-8 border-t border-border">
+            <a
+              href={`${import.meta.env.BASE_URL}/posts`}
+              class="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m12 19-7-7 7-7"></path>
+                <path d="M19 12H5"></path>
+              </svg>
+              返回文章列表
+            </a>
+          </div>
+        </div>
       </div>
-    )}
-
-    <!-- Article Content -->
-    <div class="prose-custom max-w-3xl">
-      <slot />
-    </div>
-
-    <CopyCodeButton />
-
-    <!-- Comments -->
-    <div class="max-w-3xl">
-      <Giscus />
-    </div>
-
-    <!-- Back to Posts -->
-    <div class="mt-16 pt-8 border-t border-border">
-      <a
-        href={`${import.meta.env.BASE_URL}/posts`}
-        class="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="m12 19-7-7 7-7"></path>
-          <path d="M19 12H5"></path>
-        </svg>
-        返回文章列表
-      </a>
     </div>
   </article>
 </BaseLayout>

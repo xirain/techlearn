@@ -13,16 +13,20 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 
 {
   toc.length > 0 && (
-    <nav class="toc mb-8 p-4 rounded-lg border border-border bg-card">
-      <h2 class="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+    <nav class="toc-sidebar sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto text-sm pr-4">
+      <h2 class="font-semibold text-muted-foreground uppercase tracking-wider text-xs mb-3">
         目录
       </h2>
-      <ul class="space-y-1.5 text-sm">
+      <ul class="space-y-1.5 border-l border-border pl-3">
         {toc.map((heading) => (
-          <li class={heading.depth === 3 ? "ml-4" : ""}>
+          <li>
             <a
               href={`#${heading.slug}`}
-              class="text-muted-foreground hover:text-primary transition-colors"
+              data-slug={heading.slug}
+              class:list={[
+                "toc-link block py-0.5 text-muted-foreground hover:text-primary transition-colors leading-snug",
+                heading.depth === 3 ? "pl-3 text-xs" : "",
+              ]}
             >
               {heading.text}
             </a>
@@ -32,3 +36,49 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
     </nav>
   )
 }
+
+<script>
+  function initTocHighlight() {
+    const tocLinks = document.querySelectorAll<HTMLAnchorElement>(".toc-link");
+    if (tocLinks.length === 0) return;
+
+    const headingEls = Array.from(tocLinks)
+      .map((link) => {
+        const slug = link.dataset.slug;
+        return slug ? document.getElementById(slug) : null;
+      })
+      .filter(Boolean) as HTMLElement[];
+
+    let ticking = false;
+
+    function updateActive() {
+      let activeIndex = 0;
+      for (let i = 0; i < headingEls.length; i++) {
+        if (headingEls[i].getBoundingClientRect().top <= 100) {
+          activeIndex = i;
+        }
+      }
+      tocLinks.forEach((link, i) => {
+        if (i === activeIndex) {
+          link.classList.remove("text-muted-foreground");
+          link.classList.add("text-primary", "font-medium");
+        } else {
+          link.classList.add("text-muted-foreground");
+          link.classList.remove("text-primary", "font-medium");
+        }
+      });
+      ticking = false;
+    }
+
+    window.addEventListener("scroll", () => {
+      if (!ticking) {
+        requestAnimationFrame(updateActive);
+        ticking = true;
+      }
+    }, { passive: true });
+    updateActive();
+  }
+
+  initTocHighlight();
+  document.addEventListener("astro:after-swap", initTocHighlight);
+</script>
