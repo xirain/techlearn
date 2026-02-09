@@ -32,3 +32,8 @@ Temporary Items
 # Temporary files
 *.tmp
 *.temp
+.astro/
+dist/
+node_modules/
+.claude/settings.local.json
+temp/
