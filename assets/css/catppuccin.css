@@ -3,8 +3,9 @@
    https://github.com/catppuccin/catppuccin
    ======================================== */
 
-/* Catppuccin Latte (Light Mode) */
-:root {
+/* Catppuccin Latte (Light Mode) - Match Chirpy's selector specificity */
+html:not([data-mode]),
+html[data-mode="light"] {
   /* Base colors */
   --main-bg: #EFF1F5;
   --mask-bg: #DCE0E8;
@@ -99,8 +100,8 @@
   --prompt-danger-icon-color: #D20F39;
 }
 
-/* Catppuccin Mocha (Dark Mode) */
-[data-mode="dark"] {
+/* Catppuccin Mocha (Dark Mode) - Match Chirpy's selector specificity */
+html[data-mode="dark"] {
   /* Base colors */
   --main-bg: #1E1E2E;
   --mask-bg: #313244;
