@@ -1,0 +1,224 @@
+---
+---
+
+@import 'jekyll-theme-chirpy';
+
+/* ========================================
+   Catppuccin Theme for Chirpy
+   https://github.com/catppuccin/catppuccin
+   ======================================== */
+
+/* Catppuccin Latte (Light Mode) */
+:root {
+  /* Base colors */
+  --main-bg: #EFF1F5;
+  --mask-bg: #DCE0E8;
+  --main-border-color: #CCD0DA;
+
+  /* Text */
+  --text-color: #4C4F69;
+  --text-muted-color: #6C6F85;
+  --heading-color: #4C4F69;
+  --label-color: #5C5F77;
+  --blockquote-border-color: #ACB0BE;
+  --blockquote-text-color: #6C6F85;
+
+  /* Links */
+  --link-color: #1E66F5;
+  --link-underline-color: #BCC0CC;
+
+  /* Sidebar */
+  --sidebar-bg: #E6E9EF;
+  --sidebar-border-color: #CCD0DA;
+  --site-title-color: #5C5F77;
+  --site-subtitle-color: #6C6F85;
+  --sidebar-muted-color: #6C6F85;
+  --sidebar-active-color: #4C4F69;
+  --sidebar-hover-bg: rgba(30, 102, 245, 0.1);
+  --sidebar-btn-bg: #EFF1F5;
+  --sidebar-btn-color: #6C6F85;
+  --avatar-border-color: #EFF1F5;
+
+  /* Topbar */
+  --topbar-bg: rgba(239, 241, 245, 0.7);
+  --topbar-text-color: #5C5F77;
+  --search-border-color: #CCD0DA;
+  --search-icon-color: #8C8FA1;
+  --input-focus-border-color: #1E66F5;
+
+  /* Posts */
+  --toc-highlight: #1E66F5;
+  --btn-share-color: #6C6F85;
+  --btn-share-hover-color: #1E66F5;
+  --card-bg: #EFF1F5;
+  --card-hover-bg: #DCE0E8;
+  --tb-odd-bg: #E6E9EF;
+  --tb-border-color: #CCD0DA;
+  --kbd-wrap-color: #ACB0BE;
+  --kbd-bg-color: #EFF1F5;
+
+  /* Buttons */
+  --button-bg: #EFF1F5;
+  --btn-border-color: #CCD0DA;
+  --btn-backtotop-color: #5C5F77;
+  --btn-backtotop-border-color: #CCD0DA;
+  --checkbox-color: #ACB0BE;
+  --checkbox-checked-color: #1E66F5;
+
+  /* Tags */
+  --tag-border: #CCD0DA;
+  --tag-shadow: #BCC0CC;
+  --tag-hover: #DCE0E8;
+  --search-tag-bg: #E6E9EF;
+
+  /* Categories */
+  --categories-border: #CCD0DA;
+  --categories-hover-bg: #DCE0E8;
+
+  /* Archive */
+  --timeline-color: #CCD0DA;
+  --timeline-node-bg: #8C8FA1;
+  --timeline-year-dot-color: #EFF1F5;
+
+  /* Code */
+  --language-border-color: #CCD0DA;
+  --highlight-bg-color: #E6E9EF;
+  --highlighter-rouge-color: #D20F39;
+  --highlight-lineno-color: #8C8FA1;
+  --inline-code-bg: rgba(220, 224, 232, 0.5);
+  --code-color: #4C4F69;
+  --code-header-text-color: #8C8FA1;
+  --code-header-muted-color: #BCC0CC;
+  --code-header-icon-color: #ACB0BE;
+  --clipboard-checked-color: #40A02B;
+
+  /* Prompts */
+  --prompt-text-color: rgba(76, 79, 105, 0.85);
+  --prompt-tip-bg: rgba(64, 160, 43, 0.15);
+  --prompt-tip-icon-color: #40A02B;
+  --prompt-info-bg: rgba(30, 102, 245, 0.15);
+  --prompt-info-icon-color: #1E66F5;
+  --prompt-warning-bg: rgba(223, 142, 29, 0.15);
+  --prompt-warning-icon-color: #DF8E1D;
+  --prompt-danger-bg: rgba(210, 15, 57, 0.15);
+  --prompt-danger-icon-color: #D20F39;
+}
+
+/* Catppuccin Mocha (Dark Mode) */
+[data-mode="dark"] {
+  /* Base colors */
+  --main-bg: #1E1E2E;
+  --mask-bg: #313244;
+  --main-border-color: #45475A;
+
+  /* Text */
+  --text-color: #CDD6F4;
+  --text-muted-color: #A6ADC8;
+  --text-muted-highlight-color: #BAC2DE;
+  --heading-color: #CDD6F4;
+  --label-color: #BAC2DE;
+  --blockquote-border-color: #585B70;
+  --blockquote-text-color: #A6ADC8;
+
+  /* Links */
+  --link-color: #89B4FA;
+  --link-underline-color: #45475A;
+
+  /* Sidebar */
+  --sidebar-bg: #181825;
+  --sidebar-border-color: #313244;
+  --site-title-color: #BAC2DE;
+  --site-subtitle-color: #A6ADC8;
+  --sidebar-muted-color: #A6ADC8;
+  --sidebar-active-color: #F5E0DC;
+  --sidebar-hover-bg: rgba(137, 180, 250, 0.1);
+  --sidebar-btn-bg: #1E1E2E;
+  --sidebar-btn-color: #A6ADC8;
+  --avatar-border-color: rgba(205, 214, 244, 0.9);
+
+  /* Topbar */
+  --topbar-bg: rgba(30, 30, 46, 0.7);
+  --topbar-text-color: #CDD6F4;
+  --search-border-color: #45475A;
+  --search-icon-color: #6C7086;
+  --input-focus-border-color: #89B4FA;
+
+  /* Home page */
+  --post-list-text-color: #BAC2DE;
+  --btn-patinator-text-color: #CDD6F4;
+  --btn-paginator-hover-color: #313244;
+
+  /* Posts */
+  --toc-highlight: #89B4FA;
+  --toc-popup-border-color: #45475A;
+  --btn-share-color: #6C7086;
+  --btn-share-hover-color: #89B4FA;
+  --card-bg: #1E1E2E;
+  --card-hover-bg: #313244;
+  --card-header-bg: #181825;
+  --tb-odd-bg: #181825;
+  --tb-even-bg: #1E1E2E;
+  --tb-border-color: #313244;
+  --footnote-target-bg: #45475A;
+  --kbd-wrap-color: #585B70;
+  --kbd-text-color: #CDD6F4;
+  --kbd-bg-color: #313244;
+
+  /* Buttons */
+  --button-bg: #1E1E2E;
+  --btn-border-color: #45475A;
+  --btn-backtotop-color: #CDD6F4;
+  --btn-backtotop-border-color: #313244;
+  --checkbox-color: #585B70;
+  --checkbox-checked-color: #89B4FA;
+
+  /* Tags */
+  --tag-border: #45475A;
+  --tag-shadow: #313244;
+  --tag-hover: rgba(137, 180, 250, 0.2);
+  --dash-color: #585B70;
+  --search-tag-bg: #181825;
+
+  /* Categories */
+  --categories-border: #45475A;
+  --categories-hover-bg: #313244;
+  --categories-icon-hover-color: #F5E0DC;
+
+  /* Archive */
+  --timeline-color: #45475A;
+  --timeline-node-bg: #6C7086;
+  --timeline-year-dot-color: #45475A;
+
+  /* Code */
+  --language-border-color: #313244;
+  --highlight-bg-color: #181825;
+  --highlighter-rouge-color: #F38BA8;
+  --highlight-lineno-color: #6C7086;
+  --inline-code-bg: rgba(69, 71, 90, 0.5);
+  --code-color: #CDD6F4;
+  --code-header-text-color: #6C7086;
+  --code-header-muted-color: #45475A;
+  --code-header-icon-color: #585B70;
+  --clipboard-checked-color: #A6E3A1;
+  --filepath-text-color: #BAC2DE;
+
+  /* Prompts */
+  --prompt-text-color: rgba(205, 214, 244, 0.85);
+  --prompt-tip-bg: rgba(166, 227, 161, 0.15);
+  --prompt-tip-icon-color: #A6E3A1;
+  --prompt-info-bg: rgba(137, 180, 250, 0.15);
+  --prompt-info-icon-color: #89B4FA;
+  --prompt-warning-bg: rgba(249, 226, 175, 0.15);
+  --prompt-warning-icon-color: #F9E2AF;
+  --prompt-danger-bg: rgba(243, 139, 168, 0.15);
+  --prompt-danger-icon-color: #F38BA8;
+
+  /* Image background */
+  --img-bg: radial-gradient(circle, #1E1E2E 0%, #181825 100%);
+  --shimmer-bg: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(69, 71, 90, 0.4) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
