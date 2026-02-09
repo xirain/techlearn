@@ -28,11 +28,13 @@ bundle exec jekyll build --baseurl "/techlearn"
 
 ## 架构说明
 
-- **主题**: jekyll-theme-yat
+- **主题**: jekyll-theme-chirpy (~7.0)
+  - 内置 TOC (目录) 功能，通过 tocbot 实现
+  - TOC 启用条件：`site.toc` 和 `page.toc` 均为 true，且文章包含 h2/h3 标题
 - **部署**: GitHub Actions 工作流 (.github/workflows/jekyll.yml)，推送到 main 分支时自动部署
 - **内容**: 带 YAML front matter 的 Markdown 文件
-  - `index.md` - 首页
-  - `docs/*.md` - 文档文章
+  - `_posts/*.md` - 博客文章（按日期命名：YYYY-MM-DD-title.md）
+  - `_tabs/*.md` - 导航标签页
 
 ## 添加新文档
 

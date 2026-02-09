@@ -13,6 +13,9 @@ title: Tech Learning Notes
 tagline: 记录技术成长的每一步
 description: 个人技术文档库 - 记录部署、配置和开发经验
 
+# 文章 TOC (目录) 全局开关
+toc: true
+
 # 站点 URL
 url: "https://xirain.github.io"
 baseurl: "/techlearn"
