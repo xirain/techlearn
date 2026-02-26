@@ -159,6 +159,7 @@ auto price = 9.99;  // 是 float 还是 double？写明确更好
 
 ### 2.4 结构化绑定（C++17）—— 解包利器
 
+{% raw %}
 ```cpp
 // 以前：访问 pair/tuple 的元素
 std::pair<int, std::string> p = {1, "hello"};
@@ -181,6 +182,7 @@ for (const auto& [name, score] : scores) {
     std::cout << name << ": " << score << std::endl;
 }
 ```
+{% endraw %}
 
 ------
 
