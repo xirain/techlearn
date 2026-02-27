@@ -1298,6 +1298,576 @@ DP 四步法：
 
 ------
 
+------
+
+## 补充：LeetCode 实战编程要点
+
+> 以下是刷题时反复会用到的**编程模式、边界处理和易错点**，建议收藏反复查阅。
+
+------
+
+### 一、二分查找——彻底搞懂边界
+
+二分查找 90% 的 bug 都出在**边界处理**上。记住以下三种模板，覆盖所有场景：
+
+```
+核心区别一句话：
+  left <= right  → 搜索区间 [left, right]，找到就返回
+  left < right   → 搜索区间 [left, right)，循环结束时 left == right 就是答案
+```
+
+**模板 1：精确查找——找到 target 返回下标，找不到返回 -1**
+
+```cpp
+int search(vector<int>& nums, int target) {
+    int lo = 0, hi = nums.size() - 1;   // 闭区间 [lo, hi]
+    while (lo <= hi) {                    // 注意：<=
+        int mid = lo + (hi - lo) / 2;    // 防溢出！不要写 (lo+hi)/2
+        if (nums[mid] == target) return mid;
+        else if (nums[mid] < target) lo = mid + 1;
+        else hi = mid - 1;
+    }
+    return -1;
+}
+```
+
+**模板 2：找边界——第一个 >= target 的位置（lower_bound）**
+
+```cpp
+// 返回值范围 [0, n]，如果所有元素都 < target 则返回 n
+int lowerBound(vector<int>& nums, int target) {
+    int lo = 0, hi = nums.size();   // 注意：hi = size()，开区间 [lo, hi)
+    while (lo < hi) {                // 注意：< 不是 <=
+        int mid = lo + (hi - lo) / 2;
+        if (nums[mid] < target)
+            lo = mid + 1;            // mid 太小，答案在右边
+        else
+            hi = mid;                // mid 可能是答案，不能跳过
+    }
+    return lo;                       // lo == hi 就是答案
+}
+```
+
+**模板 3：找边界——第一个 > target 的位置（upper_bound）**
+
+```cpp
+int upperBound(vector<int>& nums, int target) {
+    int lo = 0, hi = nums.size();
+    while (lo < hi) {
+        int mid = lo + (hi - lo) / 2;
+        if (nums[mid] <= target)      // 唯一区别：这里是 <=
+            lo = mid + 1;
+        else
+            hi = mid;
+    }
+    return lo;
+}
+```
+
+```
+边界写法速记口诀：
+
+  "精确查找用闭区间，边界查找用左闭右开"
+  "lo <= hi 配 hi = mid-1，lo < hi 配 hi = mid"
+
+  精确查找          边界查找（lower/upper_bound）
+  ─────────────     ──────────────────
+  hi = size() - 1   hi = size()
+  while (lo <= hi)  while (lo < hi)
+  hi = mid - 1      hi = mid
+  返回 mid           返回 lo
+
+常见变形（全部可以用 lower_bound / upper_bound 推导）：
+  ┌─────────────────────────────┬──────────────────────────────┐
+  │ 需求                        │ 写法                          │
+  ├─────────────────────────────┼──────────────────────────────┤
+  │ 第一个 == target             │ lb = lower_bound(target)      │
+  │                             │ lb < n && nums[lb] == target  │
+  ├─────────────────────────────┼──────────────────────────────┤
+  │ 最后一个 == target           │ ub = upper_bound(target) - 1  │
+  │                             │ ub >= 0 && nums[ub] == target │
+  ├─────────────────────────────┼──────────────────────────────┤
+  │ 第一个 > target              │ upper_bound(target)           │
+  ├─────────────────────────────┼──────────────────────────────┤
+  │ 最后一个 < target            │ lower_bound(target) - 1       │
+  ├─────────────────────────────┼──────────────────────────────┤
+  │ target 出现的次数            │ upper_bound - lower_bound     │
+  └─────────────────────────────┴──────────────────────────────┘
+
+"能力检测"型二分（最常考的高级变形）：
+  题目特征："最小化最大值"或"最大化最小值"
+  思路：二分答案 + 贪心验证
+  例：分割数组的最大值（LC 410）、在 D 天内送达包裹（LC 1011）
+
+  bool canFinish(int mid, ...) {
+      // 贪心检查：在限制为 mid 时能否完成
+  }
+  int lo = 最小可能值, hi = 最大可能值;
+  while (lo < hi) {
+      int mid = lo + (hi - lo) / 2;
+      if (canFinish(mid)) hi = mid;   // 能完成，尝试更小
+      else lo = mid + 1;              // 不能完成，放宽限制
+  }
+  return lo;
+```
+
+------
+
+### 二、滑动窗口——万能模板
+
+**面试超高频**，几乎每场都考。核心思想：用两个指针维护一个窗口，右指针扩展窗口、左指针收缩窗口。
+
+```cpp
+// 滑动窗口万能模板
+int slidingWindow(string s) {
+    unordered_map<char, int> window;  // 窗口内的状态
+    int left = 0, result = 0;
+
+    for (int right = 0; right < s.size(); right++) {
+        char c = s[right];
+        window[c]++;              // 1. 右指针扩展，更新窗口
+
+        while (/* 窗口需要收缩的条件 */) {
+            char d = s[left];
+            window[d]--;          // 2. 左指针收缩，更新窗口
+            left++;
+        }
+
+        result = max(result, right - left + 1);  // 3. 更新答案
+    }
+    return result;
+}
+```
+
+```
+滑动窗口适用场景识别：
+  关键词："连续子串/子数组" + "满足某个条件" + "最长/最短/计数"
+
+  ┌─────────────────────────────┬──────────────────────────────┐
+  │ 题目                        │ 窗口收缩条件                   │
+  ├─────────────────────────────┼──────────────────────────────┤
+  │ 无重复字符的最长子串 (LC 3)   │ 窗口内有重复字符时收缩         │
+  │ 最小覆盖子串 (LC 76)         │ 窗口包含所有目标字符时收缩      │
+  │ 长度最小的子数组 (LC 209)     │ 窗口内和 >= target 时收缩      │
+  │ 字母异位词 (LC 438)          │ 窗口大小 > p.size() 时收缩     │
+  │ 最多 K 个不同字符 (LC 340)    │ 窗口内不同字符 > K 时收缩      │
+  └─────────────────────────────┴──────────────────────────────┘
+
+  求最长 → 在收缩前更新答案
+  求最短 → 在收缩时更新答案
+```
+
+**实例：无重复字符的最长子串**
+
+```cpp
+int lengthOfLongestSubstring(string s) {
+    unordered_set<char> window;
+    int left = 0, result = 0;
+
+    for (int right = 0; right < s.size(); right++) {
+        while (window.count(s[right])) {   // 有重复就收缩
+            window.erase(s[left]);
+            left++;
+        }
+        window.insert(s[right]);
+        result = max(result, right - left + 1);
+    }
+    return result;
+}
+```
+
+------
+
+### 三、双指针——三种常见模式
+
+```
+模式 1：对撞指针（两端往中间走）
+  适用：有序数组上的两数之和、接雨水、盛水最多的容器
+
+  int left = 0, right = n - 1;
+  while (left < right) {
+      if (满足条件) 更新答案;
+      if (某条件) left++;
+      else right--;
+  }
+
+模式 2：快慢指针（同方向不同速度）
+  适用：链表找环、链表中点、删除链表倒数第 N 个节点
+
+  ListNode* slow = head, *fast = head;
+  while (fast && fast->next) {
+      slow = slow->next;
+      fast = fast->next->next;
+  }
+  // slow 在中点（偶数节点时在左中点）
+
+模式 3：同向双指针（归并/分区/去重）
+  适用：合并有序数组、移除元素、去重
+
+  // 原地去重（有序数组）
+  int slow = 0;
+  for (int fast = 1; fast < n; fast++) {
+      if (nums[fast] != nums[slow]) {
+          nums[++slow] = nums[fast];
+      }
+  }
+  // 去重后长度 = slow + 1
+```
+
+------
+
+### 四、单调栈——下一个更大/更小元素
+
+```
+核心思路：维护一个从栈底到栈顶单调递减（或递增）的栈。
+遍历数组，对每个元素：
+  1. 把栈中所有比它小的元素弹出（这些元素的"下一个更大"就是当前元素）
+  2. 当前元素入栈
+```
+
+```cpp
+// 下一个更大元素（经典模板）
+vector<int> nextGreater(vector<int>& nums) {
+    int n = nums.size();
+    vector<int> result(n, -1);     // 默认 -1 表示没有更大的
+    stack<int> st;                  // 存下标
+
+    for (int i = 0; i < n; i++) {
+        while (!st.empty() && nums[st.top()] < nums[i]) {
+            result[st.top()] = nums[i];  // 栈顶元素的下一个更大就是 nums[i]
+            st.pop();
+        }
+        st.push(i);
+    }
+    return result;
+}
+```
+
+```
+单调栈变形速查：
+  ┌─────────────────────────┬──────────────────────────────────┐
+  │ 需求                    │ 栈的单调性                         │
+  ├─────────────────────────┼──────────────────────────────────┤
+  │ 下一个更大元素           │ 单调递减栈（栈顶最小）              │
+  │ 下一个更小元素           │ 单调递增栈（栈顶最大）              │
+  │ 上一个更大元素           │ 单调递减栈 + 从右往左遍历            │
+  └─────────────────────────┴──────────────────────────────────┘
+
+  经典题：每日温度(LC 739)、柱状图最大矩形(LC 84)、接雨水(LC 42)
+```
+
+------
+
+### 五、前缀和——O(1) 求区间和
+
+```
+思路：preSum[i] = nums[0] + nums[1] + ... + nums[i-1]
+     区间和 sum(l, r) = preSum[r+1] - preSum[l]
+
+     nums:    [2, 3, 1, 4, 5]
+     preSum: [0, 2, 5, 6, 10, 15]
+                ↑ preSum[0] = 0（哨兵，非常关键！）
+
+     sum(1, 3) = preSum[4] - preSum[1] = 10 - 2 = 8
+     验证：3 + 1 + 4 = 8 ✓
+```
+
+```cpp
+// 前缀和构建
+vector<int> preSum(nums.size() + 1, 0);
+for (int i = 0; i < nums.size(); i++) {
+    preSum[i + 1] = preSum[i] + nums[i];
+}
+// 区间和 [l, r]
+int rangeSum = preSum[r + 1] - preSum[l];
+```
+
+```
+前缀和的高级变形：
+
+  "和为 K 的子数组"（LC 560）→ 前缀和 + 哈希表
+    关键公式：preSum[j] - preSum[i] == K
+    → 对每个 j，找之前有多少个 preSum[i] == preSum[j] - K
+    → 用 unordered_map 存之前出现过的前缀和
+
+  二维前缀和 → 矩阵区域和（LC 304）
+    preSum[i][j] = 左上角 (0,0) 到 (i-1,j-1) 的和
+    区域和 = preSum[r2+1][c2+1] - preSum[r1][c2+1]
+                                - preSum[r2+1][c1] + preSum[r1][c1]
+```
+
+------
+
+### 六、并查集（Union-Find）——连通性问题
+
+```cpp
+class UnionFind {
+    vector<int> parent, rank_;
+public:
+    UnionFind(int n) : parent(n), rank_(n, 0) {
+        iota(parent.begin(), parent.end(), 0);  // parent[i] = i
+    }
+
+    int find(int x) {
+        if (parent[x] != x)
+            parent[x] = find(parent[x]);  // 路径压缩
+        return parent[x];
+    }
+
+    void unite(int x, int y) {
+        int px = find(x), py = find(y);
+        if (px == py) return;
+        if (rank_[px] < rank_[py]) swap(px, py);  // 按秩合并
+        parent[py] = px;
+        if (rank_[px] == rank_[py]) rank_[px]++;
+    }
+
+    bool connected(int x, int y) {
+        return find(x) == find(y);
+    }
+};
+```
+
+```
+并查集适用场景：
+  关键词："连通性"、"是否属于同一组"、"合并"
+
+  经典题：
+  ├── 岛屿数量（LC 200）—— BFS/DFS 也行，但并查集更优雅
+  ├── 冗余连接（LC 684）—— 加边时检测是否成环
+  ├── 账户合并（LC 721）
+  └── 最小生成树 Kruskal 算法
+
+  时间复杂度：近乎 O(1)（均摊，严格说是反阿克曼函数 α(n)）
+```
+
+------
+
+### 七、DP 公式速查表
+
+> 面试时最怕"我知道用 DP 但想不出转移方程"。以下是高频 DP 题的**状态定义和转移方程速查**。
+
+```
+┌──────────────────────┬──────────────────────┬─────────────────────────────────┐
+│ 题目                  │ 状态定义              │ 转移方程                         │
+├──────────────────────┼──────────────────────┼─────────────────────────────────┤
+│ 爬楼梯 (LC 70)        │ dp[i] = 到第i阶方法数 │ dp[i] = dp[i-1] + dp[i-2]       │
+│ 打家劫舍 (LC 198)     │ dp[i] = 前i家最大金额 │ dp[i] = max(dp[i-1],            │
+│                      │                      │              dp[i-2]+nums[i])   │
+│ 最大子数组和 (LC 53)   │ dp[i] = 以i结尾的最大和│ dp[i] = max(nums[i],            │
+│                      │                      │              dp[i-1]+nums[i])   │
+│ 最长递增子序列 (LC 300)│ dp[i] = 以i结尾的LIS  │ dp[i] = max(dp[j]+1)            │
+│                      │ 长度                  │   for j < i where nums[j]<nums[i]│
+│ 零钱兑换 (LC 322)     │ dp[i] = 凑出i的最少   │ dp[i] = min(dp[i-coins[j]]+1)   │
+│                      │ 硬币数                │   for each coin                  │
+│ 最长公共子序列 (LC 1143)│dp[i][j] = A前i个和    │ 相同: dp[i-1][j-1]+1             │
+│                      │ B前j个的LCS长度        │ 不同: max(dp[i-1][j], dp[i][j-1])│
+│ 编辑距离 (LC 72)      │ dp[i][j] = A前i个变成 │ 相同: dp[i-1][j-1]               │
+│                      │ B前j个的最少操作        │ 不同: min(dp[i-1][j],            │
+│                      │                      │   dp[i][j-1], dp[i-1][j-1]) + 1 │
+│ 不同路径 (LC 62)      │ dp[i][j] = 到(i,j)    │ dp[i][j] = dp[i-1][j]           │
+│                      │ 的路径数               │          + dp[i][j-1]            │
+│ 0-1背包              │ dp[j] = 容量j时最大价值 │ dp[j] = max(dp[j],              │
+│                      │                      │              dp[j-w[i]]+v[i])    │
+│                      │                      │   j 从大到小遍历！                │
+│ 完全背包              │ 同上                  │ 同上，但 j 从小到大遍历！          │
+│ 最长回文子串 (LC 5)    │ dp[i][j] = s[i..j]   │ dp[i][j] = s[i]==s[j]           │
+│                      │ 是否回文              │            && dp[i+1][j-1]       │
+│ 单词拆分 (LC 139)     │ dp[i] = s[0..i)能否   │ dp[i] = any(dp[j] &&            │
+│                      │ 被拆分                │         s[j..i) in dict)         │
+└──────────────────────┴──────────────────────┴─────────────────────────────────┘
+
+DP 空间优化口诀：
+  "一维看方向，二维看依赖"
+  0-1背包逆序遍历 → 保证每个物品只用一次
+  完全背包正序遍历 → 允许物品重复使用
+  二维 DP 只依赖上一行 → 滚动数组优化为两行或一行
+```
+
+------
+
+### 八、位运算技巧速查
+
+```
+常用位运算操作：
+  n & 1              → 判断奇偶（等价于 n % 2）
+  n & (n - 1)        → 消除最低位的 1（Brian Kernighan）
+  n | (n + 1)        → 将最低位的 0 变成 1
+  n & (-n)           → 提取最低位的 1（lowbit）
+  n ^ n = 0          → 任何数异或自己等于 0
+  n ^ 0 = n          → 任何数异或 0 等于自己
+
+经典题：
+  只出现一次的数字 (LC 136)：全部异或，成对抵消，剩下的就是答案
+    int result = 0;
+    for (int num : nums) result ^= num;
+    return result;
+
+  统计二进制中 1 的个数 (LC 191)：
+    int count = 0;
+    while (n) {
+        n &= (n - 1);   // 每次消除一个 1
+        count++;
+    }
+
+  判断是否是 2 的幂：n > 0 && (n & (n-1)) == 0
+  两个数不用临时变量交换：a ^= b; b ^= a; a ^= b;
+```
+
+------
+
+### 九、Trie（前缀树）
+
+```cpp
+struct TrieNode {
+    TrieNode* children[26] = {};
+    bool isEnd = false;
+};
+
+class Trie {
+    TrieNode* root = new TrieNode();
+public:
+    void insert(const string& word) {
+        auto node = root;
+        for (char c : word) {
+            int i = c - 'a';
+            if (!node->children[i])
+                node->children[i] = new TrieNode();
+            node = node->children[i];
+        }
+        node->isEnd = true;
+    }
+
+    bool search(const string& word) {
+        auto node = find(word);
+        return node && node->isEnd;
+    }
+
+    bool startsWith(const string& prefix) {
+        return find(prefix) != nullptr;
+    }
+
+private:
+    TrieNode* find(const string& s) {
+        auto node = root;
+        for (char c : s) {
+            int i = c - 'a';
+            if (!node->children[i]) return nullptr;
+            node = node->children[i];
+        }
+        return node;
+    }
+};
+```
+
+```
+Trie 适用场景：
+  ├── 前缀匹配/自动补全
+  ├── 单词搜索 II（LC 212）—— Trie + 回溯
+  ├── 词典中最长的单词（LC 720）
+  └── 替换单词（LC 648）
+
+  时间：插入/查找 O(L)，L = 单词长度
+  空间：最坏 O(26^L)，但通常远小于此
+```
+
+------
+
+### 十、常见易错点与避坑指南
+
+```
+1. 整数溢出
+   ✗ int mid = (left + right) / 2;            // left + right 可能溢出！
+   ✓ int mid = left + (right - left) / 2;     // 安全
+
+   ✗ int area = width * height;                // 两个 int 相乘可能溢出
+   ✓ long long area = (long long)width * height;
+
+2. 边界条件清单（写完代码后逐一检查）
+   □ 空输入：nums.size() == 0
+   □ 单元素：nums.size() == 1
+   □ 全相同元素：[1, 1, 1, 1]
+   □ 已排序/逆序：[1, 2, 3] / [3, 2, 1]
+   □ 负数：[-1, -2, 3]
+   □ 最大/最小值：INT_MAX, INT_MIN
+
+3. 数组越界
+   ✗ for (int i = 0; i <= nums.size(); i++)    // size() 返回 unsigned!
+      // 当 nums 为空时 nums.size() - 1 = 巨大无符号数
+   ✓ for (int i = 0; i < (int)nums.size(); i++)
+   ✓ int n = nums.size();  // 先转成 int
+
+4. 引用 vs 值传递
+   ✗ void dfs(vector<int> path, ...)   // 每次递归都拷贝 path，O(n) 额外开销
+   ✓ void dfs(vector<int>& path, ...) // 引用传递 + push_back/pop_back
+
+5. unordered_map 的默认值
+   map[key]++;   // 如果 key 不存在，会自动插入 key:0 然后 +1
+                 // 这在统计频率时很方便，但在检查存在性时可能引入 bug
+   // 检查存在性用 count() 或 find()，不要用 []
+
+6. 字符串比较
+   ✗ s1 == s2    // string 比较是 O(n)，不是 O(1)
+                 // 如果在循环内频繁比较长字符串，考虑用哈希
+
+7. 递归爆栈
+   深度超过 ~10^4 时可能栈溢出
+   → 改成迭代 + 显式栈
+   → 或者用尾递归优化（C++ 编译器可能优化）
+
+8. 浮点数比较
+   ✗ if (a == b)             // 浮点数不能直接比较
+   ✓ if (abs(a - b) < 1e-9)  // 使用 epsilon
+
+9. 取模运算
+   题目说"答案对 10^9+7 取模"时：
+   const int MOD = 1e9 + 7;
+   // 加法取模：(a + b) % MOD
+   // 乘法取模：(1LL * a * b) % MOD    ← 注意先转 long long
+   // 减法取模：(a - b + MOD) % MOD    ← 防止负数！
+
+10. 图的 visited 标记时机
+    ✗ BFS 中在出队时标记 visited → 会重复入队，TLE
+    ✓ BFS 中在入队时立即标记 visited
+    DFS 中进入递归前标记（回溯时取消标记，如果需要所有路径）
+```
+
+------
+
+### 十一、做题分类速查——"看到 XXX 就想到 YYY"
+
+```
+看到"连续子数组/子串"    → 滑动窗口 / 前缀和
+看到"排列/组合/子集"     → 回溯
+看到"最短/最少步数"      → BFS
+看到"最长/最大/最小"     → DP / 贪心
+看到"有序数组查找"       → 二分
+看到"第 K 大/小"         → 堆 / 快速选择
+看到"连通性/分组"        → 并查集 / DFS
+看到"前缀匹配"           → Trie
+看到"下一个更大/更小"    → 单调栈
+看到"区间合并/重叠"      → 排序 + 贪心
+看到"树的路径/深度"      → DFS 递归
+看到"层序/最近"          → BFS
+看到"拓扑排序/先修课"    → BFS(Kahn) / DFS
+看到"网格/矩阵搜索"      → DFS / BFS + visited
+看到"回文"               → 中心扩展 / DP
+看到"括号匹配/嵌套"      → 栈
+看到"区间和/范围查询"    → 前缀和 / 线段树 / 树状数组
+看到"最大化最小值"       → 二分答案
+
+复杂度倒推法（n 是数据范围）：
+  n ≤ 10       → 暴力/回溯/全排列 O(n!)
+  n ≤ 20       → 状压DP O(2^n) / 回溯剪枝
+  n ≤ 100      → O(n^3) DP
+  n ≤ 1000     → O(n^2) DP
+  n ≤ 10^5     → O(n log n) 排序/二分/堆
+  n ≤ 10^6     → O(n) 双指针/滑动窗口/前缀和
+  n ≤ 10^9     → O(log n) 二分/数学
+```
+
+------
+
 > 数据结构和算法不是背题，是练思维。理解了"为什么这个数据结构适合这个问题"，你就不再需要背 500 道题了。
 
 > 本系列相关文章：
