@@ -568,6 +568,7 @@ int main() {
 
 **考点**：C++17 结构化绑定、`if constexpr`、`constexpr if` + `type_traits` 编译期分支
 
+{% raw %}
 ```cpp
 // structured_binding.cpp
 // g++ -std=c++20 -o structured_binding structured_binding.cpp
@@ -690,6 +691,7 @@ int main() {
     std::cout << "\nAll tests passed!\n";
 }
 ```
+{% endraw %}
 
 **关键点**：
 - 结构化绑定适用于 `pair`、`tuple`、`struct`（公有成员）、`array`

@@ -468,6 +468,7 @@ set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-checks=bugprone-*,performance-*")
 
 **记忆点**：**CI = 格式检查 + 静态分析 + 构建 + 测试 + Sanitizer**
 
+{% raw %}
 ```yaml
 # GitHub Actions 示例
 name: CI
@@ -527,6 +528,7 @@ jobs:
           find src include -name "*.cpp" -o -name "*.h" | \
             xargs clang-format --dry-run --Werror
 ```
+{% endraw %}
 
 ---
 
