@@ -10,7 +10,7 @@ tags: [c++, 练手代码, 网络编程, epoll, Reactor, TCP, socket, 定时器, 
 
 > **注意**：本文代码需要在 **Linux** 环境下编译运行（使用 epoll/socket API）。
 
-> 📌 关联阅读：[高性能网络编程面试题](/posts/high-performance-network-interview) · [Linux 系统编程面试题](/posts/linux-system-programming-interview) · [并发编程练手代码](/posts/concurrency-practice)
+> 📌 关联阅读：[高性能网络编程面试题](/techlearn/posts/high-performance-network-interview) · [Linux 系统编程面试题](/techlearn/posts/linux-system-programming-interview) · [并发编程练手代码](/techlearn/posts/concurrency-practice)
 
 ------
 

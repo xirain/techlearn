@@ -8,7 +8,7 @@ tags: [c++, 练手代码, 现代c++, 智能指针, 移动语义, lambda, 协程,
 
 面试能答对概念只是第一步，**能当场写出来才是硬实力**。这篇文章提供 8 个现代 C++ 练手程序，每个约 100 行，覆盖面试高频考点，可直接 `g++ -std=c++20` 编译运行。
 
-> 📌 关联阅读：[现代 C++ 面试题](/posts/modern-cpp-interview) · [C++ 对象模型面试题](/posts/cpp-object-model-interview) · [C++ 模板元编程面试题](/posts/cpp-template-metaprogramming-interview)
+> 📌 关联阅读：[现代 C++ 面试题](/techlearn/posts/modern-cpp-interview) · [C++ 对象模型面试题](/techlearn/posts/cpp-object-model-interview) · [C++ 模板元编程面试题](/techlearn/posts/cpp-template-metaprogramming-interview)
 
 ------
 

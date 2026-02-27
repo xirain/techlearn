@@ -8,7 +8,7 @@ tags: [c++, 练手代码, 并发, 多线程, mutex, atomic, 线程池, 内存序
 
 并发编程是 C++ 面试的**硬核考区**——能写出正确的线程安全队列、理解 memory_order 的含义、手撸简易线程池，直接证明你的系统编程能力。这 7 个练习覆盖从基础锁到无锁编程的核心场景。
 
-> 📌 关联阅读：[锁与并发面试题](/posts/lock-concurrency-memory-model-interview) · [高性能优化面试题](/posts/high-performance-interview) · [现代 C++ 练手代码](/posts/modern-cpp-practice)
+> 📌 关联阅读：[锁与并发面试题](/techlearn/posts/lock-concurrency-memory-model-interview) · [高性能优化面试题](/techlearn/posts/high-performance-interview) · [现代 C++ 练手代码](/techlearn/posts/modern-cpp-practice)
 
 ------
 

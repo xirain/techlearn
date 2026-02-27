@@ -10,7 +10,7 @@ tags: [面试, 消息队列, kafka, rabbitmq, rocketmq, 分布式, 中间件, �
 
 这篇文章从**核心概念 → Kafka 深入 → RabbitMQ → RocketMQ → 通用难题**五条线展开，每道题都带**架构图和方案对比**。
 
-> 📌 关联阅读：[系统设计面试题](/posts/system-design-interview) · [Redis 与缓存架构面试题](/posts/redis-cache-interview) · [分布式理论面试题](/posts/distributed-consensus-interview)
+> 📌 关联阅读：[系统设计面试题](/techlearn/posts/system-design-interview) · [Redis 与缓存架构面试题](/techlearn/posts/redis-cache-interview) · [分布式理论面试题](/techlearn/posts/distributed-consensus-interview)
 
 ------
 

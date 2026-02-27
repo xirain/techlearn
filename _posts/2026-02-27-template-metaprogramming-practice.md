@@ -8,7 +8,7 @@ tags: [c++, 练手代码, 模板元编程, SFINAE, CRTP, type_traits, 变参模�
 
 模板元编程是 C++ 面试的**天花板考点**——能手写 `enable_if`、理解 SFINAE 触发条件、用 CRTP 替代虚函数，展示的是对 C++ 类型系统的深度掌控。这 6 个练习从基础到高级逐步递进。
 
-> 📌 关联阅读：[C++ 模板元编程面试题](/posts/cpp-template-metaprogramming-interview) · [现代 C++ 练手代码](/posts/modern-cpp-practice) · [C++ 对象模型练手代码](/posts/cpp-object-model-practice)
+> 📌 关联阅读：[C++ 模板元编程面试题](/techlearn/posts/cpp-template-metaprogramming-interview) · [现代 C++ 练手代码](/techlearn/posts/modern-cpp-practice) · [C++ 对象模型练手代码](/techlearn/posts/cpp-object-model-practice)
 
 ------
 

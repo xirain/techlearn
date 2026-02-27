@@ -10,7 +10,7 @@ tags: [面试, 分布式, 一致性, CAP, Raft, Paxos, 分布式事务, etcd, Zo
 
 这篇文章从**基础理论 → 共识算法 → 分布式事务 → 分布式协调 → 进阶问题**五条线展开，每道题都带**架构图和方案对比**。
 
-> 📌 关联阅读：[系统设计面试题](/posts/system-design-interview) · [消息队列面试题](/posts/message-queue-interview) · [数据库面试题](/posts/database-interview)
+> 📌 关联阅读：[系统设计面试题](/techlearn/posts/system-design-interview) · [消息队列面试题](/techlearn/posts/message-queue-interview) · [数据库面试题](/techlearn/posts/database-interview)
 
 ------
 

@@ -10,7 +10,7 @@ tags: [面试, 网络编程, epoll, Reactor, TCP, 高性能, IO多路复用, Net
 
 这篇文章从**IO 模型 → IO 多路复用 → 事件驱动架构 → TCP 细节 → 高性能实践**五条线展开，每道题都带**架构图和性能对比**。
 
-> 📌 关联阅读：[操作系统面试题](/posts/os-interview) · [网络协议面试题](/posts/network-protocol-interview) · [Linux 系统编程面试题](/posts/linux-system-programming-interview)
+> 📌 关联阅读：[操作系统面试题](/techlearn/posts/os-interview) · [网络协议面试题](/techlearn/posts/network-protocol-interview) · [Linux 系统编程面试题](/techlearn/posts/linux-system-programming-interview)
 
 ------
 

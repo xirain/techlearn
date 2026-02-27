@@ -8,7 +8,7 @@ tags: [c++, 练手代码, 高性能, 内存池, cache, 无锁队列, SIMD, 性�
 
 高性能 C++ 是区分"会写"和"写得好"的分水岭——面试中能手写内存池、解释 false sharing、实现无锁队列，直接拉满技术评分。这 6 个练习对应面试中最常考的性能优化场景。
 
-> 📌 关联阅读：[高性能优化面试题](/posts/high-performance-interview) · [锁与并发练手代码](/posts/concurrency-practice) · [C++ 对象模型练手代码](/posts/cpp-object-model-practice)
+> 📌 关联阅读：[高性能优化面试题](/techlearn/posts/high-performance-interview) · [锁与并发练手代码](/techlearn/posts/concurrency-practice) · [C++ 对象模型练手代码](/techlearn/posts/cpp-object-model-practice)
 
 ------
 
