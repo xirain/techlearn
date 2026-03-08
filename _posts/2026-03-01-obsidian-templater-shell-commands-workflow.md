@@ -138,15 +138,15 @@ await tp.file.rename(tp.date.now('YYYY-MM-DD') + ' ' + title);
 **设置** → **Shell Commands** → 点 **+** 添加新命令，填入：
 
 ```bash
-cd "{{folder_path:absolute}}" && npx -y bun D:/code/wxgzh/baoyu-post-to-wechat/scripts/wechat-article.ts --markdown {{file_name}} --theme spring --localtemp
+cd "\{\{folder_path:absolute\}\}" && npx -y bun D:/code/wxgzh/baoyu-post-to-wechat/scripts/wechat-article.ts --markdown \{\{file_name\}\} --theme spring --localtemp
 ```
 
 **变量说明：**
 
 | 变量 | 含义 | 示例值 |
 |------|------|--------|
-| `{{folder_path:absolute}}` | 当前文件所在目录的绝对路径 | `D:\code\wxgzh\围巾` |
-| `{{file_name}}` | 当前文件名（含扩展名） | `2026-03-01 分享钩针图解，三角围巾.md` |
+| `\{\{folder_path:absolute\}\}` | 当前文件所在目录的绝对路径 | `D:\code\wxgzh\围巾` |
+| `\{\{file_name\}\}` | 当前文件名（含扩展名） | `2026-03-01 分享钩针图解，三角围巾.md` |
 
 通过 `cd` 命令切换到文件所在目录，确保脚本能正确找到相对路径的资源文件（如 `assets/` 中的图片）。
 
@@ -160,12 +160,12 @@ cd "{{folder_path:absolute}}" && npx -y bun D:/code/wxgzh/baoyu-post-to-wechat/s
 
 | 变量 | 含义 |
 |------|------|
-| `{{file_path:absolute}}` | 文件绝对路径 |
-| `{{file_path:relative}}` | 文件相对路径 |
-| `{{file_name}}` | 文件名（含扩展名） |
-| `{{title}}` | 文件名（不含扩展名） |
-| `{{folder_path:absolute}}` | 所在文件夹绝对路径 |
-| `{{date:YYYY-MM-DD}}` | 当前日期 |
+| `\{\{file_path:absolute\}\}` | 文件绝对路径 |
+| `\{\{file_path:relative\}\}` | 文件相对路径 |
+| `\{\{file_name\}\}` | 文件名（含扩展名） |
+| `\{\{title\}\}` | 文件名（不含扩展名） |
+| `\{\{folder_path:absolute\}\}` | 所在文件夹绝对路径 |
+| `\{\{date:YYYY-MM-DD\}\}` | 当前日期 |
 
 ## 五、Commander 右键菜单集成
 

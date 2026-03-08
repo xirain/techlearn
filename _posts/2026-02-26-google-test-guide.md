@@ -1257,19 +1257,19 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         build_type: [Debug, Release]
 
-    runs-on: ${{ matrix.os }}
+    runs-on: $\{\{ matrix.os \}\}
 
     steps:
     - uses: actions/checkout@v4
 
     - name: Configure
-      run: cmake -B build -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+      run: cmake -B build -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=$\{\{ matrix.build_type \}\}
 
     - name: Build
-      run: cmake --build build --config ${{ matrix.build_type }}
+      run: cmake --build build --config $\{\{ matrix.build_type \}\}
 
     - name: Test
-      run: cd build && ctest -C ${{ matrix.build_type }} --verbose
+      run: cd build && ctest -C $\{\{ matrix.build_type \}\} --verbose
 ```
 {% endraw %}
 

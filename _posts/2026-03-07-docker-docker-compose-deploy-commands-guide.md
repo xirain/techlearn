@@ -95,7 +95,7 @@ docker run -d --name payment-api -p 8080:8080 \
 ```bash
 docker ps
 docker ps -a
-docker inspect payment-api --format='{{.State.Status}} {{.State.ExitCode}} {{.State.OOMKilled}}'
+docker inspect payment-api --format='\{\{.State.Status\}\} \{\{.State.ExitCode\}\} \{\{.State.OOMKilled\}\}'
 ```
 
 如果容器一直重启：

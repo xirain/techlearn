@@ -648,7 +648,7 @@ int main() {
         std::cout << "  point: (" << x << ", " << y << ", " << z << ")\n";
 
         // map 遍历
-        std::map<std::string, int> scores = {{"Alice", 90}, {"Bob", 85}};
+        std::map<std::string, int> scores = { {"Alice", 90}, {"Bob", 85} };
         for (const auto& [name, score] : scores) {
             std::cout << "  " << name << ": " << score << "\n";
         }

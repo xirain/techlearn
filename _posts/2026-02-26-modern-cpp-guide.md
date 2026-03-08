@@ -170,7 +170,7 @@ std::string name = p.second;
 auto [id, name] = p;   // 直接拆开！
 
 // 遍历 map 也变得优雅
-std::map<std::string, int> scores = {{"Alice", 90}, {"Bob", 85}};
+std::map<std::string, int> scores = { {"Alice", 90}, {"Bob", 85} };
 
 // 以前
 for (auto it = scores.begin(); it != scores.end(); ++it) {

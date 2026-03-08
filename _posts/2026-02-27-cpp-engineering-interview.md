@@ -484,7 +484,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Configure
-        run: cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        run: cmake -B build -DCMAKE_BUILD_TYPE=$\{\{ matrix.build_type \}\}
 
       - name: Build
         run: cmake --build build -j $(nproc)
@@ -503,7 +503,7 @@ jobs:
       - name: Build with Sanitizer
         run: |
           cmake -B build \
-            -DCMAKE_CXX_FLAGS="-fsanitize=${{ matrix.sanitizer }} -g" \
+            -DCMAKE_CXX_FLAGS="-fsanitize=$\{\{ matrix.sanitizer \}\} -g" \
             -DCMAKE_BUILD_TYPE=Debug
           cmake --build build -j $(nproc)
 
