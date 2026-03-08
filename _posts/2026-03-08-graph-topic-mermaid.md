@@ -228,7 +228,7 @@ class Solution {
         }
 
         int minutes = 0;
-        int[][] dirs = {{1,0},{-1,0},{0,1},{0,-1}};
+        int[][] dirs = new int[][] { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };
 
         while (!queue.isEmpty() && fresh > 0) {
             int size = queue.size();
