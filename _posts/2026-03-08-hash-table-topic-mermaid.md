@@ -107,20 +107,19 @@ flowchart TD
 
 题型定位：值到下标映射。
 
-```java
+```cpp
 class Solution {
-    public int[] twoSum(int[] nums, int target) {
-        Map<Integer, Integer> map = new HashMap<>();
-        for (int i = 0; i < nums.length; i++) {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_map<int, int> pos;
+        for (int i = 0; i < static_cast<int>(nums.size()); ++i) {
             int need = target - nums[i];
-            if (map.containsKey(need)) {
-                return new int[]{map.get(need), i};
-            }
-            map.put(nums[i], i);
+            if (pos.count(need)) return {pos[need], i};
+            pos[nums[i]] = i;
         }
-        return new int[0];
+        return {};
     }
-}
+};
 ```
 
 ```mermaid
@@ -140,19 +139,21 @@ flowchart TD
 
 题型定位：哈希分组。
 
-```java
+```cpp
 class Solution {
-    public List<List<String>> groupAnagrams(String[] strs) {
-        Map<String, List<String>> map = new HashMap<>();
-        for (String s : strs) {
-            char[] arr = s.toCharArray();
-            Arrays.sort(arr);
-            String key = new String(arr);
-            map.computeIfAbsent(key, k -> new ArrayList<>()).add(s);
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        unordered_map<string, vector<string>> groups;
+        for (const string& s : strs) {
+            string key = s;
+            sort(key.begin(), key.end());
+            groups[key].push_back(s);
         }
-        return new ArrayList<>(map.values());
+        vector<vector<string>> res;
+        for (auto& [_, bucket] : groups) res.push_back(bucket);
+        return res;
     }
-}
+};
 ```
 
 ```mermaid
@@ -170,27 +171,24 @@ flowchart TD
 
 题型定位：哈希集合判存在。
 
-```java
+```cpp
 class Solution {
-    public int longestConsecutive(int[] nums) {
-        Set<Integer> set = new HashSet<>();
-        for (int num : nums) set.add(num);
-
+public:
+    int longestConsecutive(vector<int>& nums) {
+        unordered_set<int> st(nums.begin(), nums.end());
         int ans = 0;
-        for (int num : set) {
-            if (!set.contains(num - 1)) {
-                int cur = num;
-                int len = 1;
-                while (set.contains(cur + 1)) {
-                    cur++;
-                    len++;
-                }
-                ans = Math.max(ans, len);
+        for (int num : st) {
+            if (st.count(num - 1)) continue;
+            int cur = num, len = 1;
+            while (st.count(cur + 1)) {
+                ++cur;
+                ++len;
             }
+            ans = max(ans, len);
         }
         return ans;
     }
-}
+};
 ```
 
 ```mermaid
@@ -209,21 +207,21 @@ flowchart TD
 
 题型定位：前缀和 + 哈希计数。
 
-```java
+```cpp
 class Solution {
-    public int subarraySum(int[] nums, int k) {
-        Map<Integer, Integer> map = new HashMap<>();
-        map.put(0, 1);
+public:
+    int subarraySum(vector<int>& nums, int k) {
+        unordered_map<int, int> cnt;
+        cnt[0] = 1;
         int sum = 0, ans = 0;
-
-        for (int num : nums) {
-            sum += num;
-            ans += map.getOrDefault(sum - k, 0);
-            map.put(sum, map.getOrDefault(sum, 0) + 1);
+        for (int x : nums) {
+            sum += x;
+            if (cnt.count(sum - k)) ans += cnt[sum - k];
+            ++cnt[sum];
         }
         return ans;
     }
-}
+};
 ```
 
 ```mermaid
@@ -245,7 +243,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A[看到题目] --> B{是否涉及 查找 判重 计数 配对}
-    B -->|是| C[优先考虑 HashMap / HashSet]
+    B -->|是| C[优先考虑 unordered_map / unordered_set]
     B -->|否| D{是否能把对象映射成规范 key}
     D -->|是| E[考虑哈希分组]
     D -->|否| F[再看双指针 排序 DP 等模型]

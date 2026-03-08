@@ -89,10 +89,12 @@ flowchart TD
 
 这篇统一用更直观的左闭右闭写法：
 
-```java
+```cpp
 while (l <= r) {
     int mid = l + (r - l) / 2;
-    ...
+    if (nums[mid] == target) return mid;
+    if (nums[mid] < target) l = mid + 1;
+    else r = mid - 1;
 }
 ```
 
@@ -136,10 +138,11 @@ flowchart LR
 
 题型定位：标准有序数组二分。
 
-```java
+```cpp
 class Solution {
-    public int search(int[] nums, int target) {
-        int l = 0, r = nums.length - 1;
+public:
+    int search(vector<int>& nums, int target) {
+        int l = 0, r = static_cast<int>(nums.size()) - 1;
         while (l <= r) {
             int mid = l + (r - l) / 2;
             if (nums[mid] == target) return mid;
@@ -148,7 +151,7 @@ class Solution {
         }
         return -1;
     }
-}
+};
 ```
 
 ```mermaid
@@ -167,11 +170,12 @@ flowchart TD
 
 题型定位：找第一个大于等于目标的位置。
 
-```java
+```cpp
 class Solution {
-    public int searchInsert(int[] nums, int target) {
-        int l = 0, r = nums.length - 1;
-        int ans = nums.length;
+public:
+    int searchInsert(vector<int>& nums, int target) {
+        int l = 0, r = static_cast<int>(nums.size()) - 1;
+        int ans = static_cast<int>(nums.size());
         while (l <= r) {
             int mid = l + (r - l) / 2;
             if (nums[mid] >= target) {
@@ -183,7 +187,7 @@ class Solution {
         }
         return ans;
     }
-}
+};
 ```
 
 ```mermaid
@@ -213,12 +217,42 @@ flowchart TD
     C --> D[找最后一个 target]
 ```
 
-```java
+```cpp
 class Solution {
-    public int[] searchRange(int[] nums, int target) {
-        return new int[]{leftBound(nums, target), rightBound(nums, target)};
+public:
+    vector<int> searchRange(vector<int>& nums, int target) {
+        return {leftBound(nums, target), rightBound(nums, target)};
     }
-}
+
+private:
+    int leftBound(vector<int>& nums, int target) {
+        int l = 0, r = static_cast<int>(nums.size()) - 1, ans = -1;
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+            if (nums[mid] >= target) {
+                if (nums[mid] == target) ans = mid;
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return ans;
+    }
+
+    int rightBound(vector<int>& nums, int target) {
+        int l = 0, r = static_cast<int>(nums.size()) - 1, ans = -1;
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+            if (nums[mid] <= target) {
+                if (nums[mid] == target) ans = mid;
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+        return ans;
+    }
+};
 ```
 
 这题训练的是：
@@ -232,21 +266,28 @@ class Solution {
 
 题意：求最小吃香蕉速度，使得在 `h` 小时内吃完。
 
-```java
+```cpp
 class Solution {
-    public int minEatingSpeed(int[] piles, int h) {
-        int l = 1, r = Arrays.stream(piles).max().getAsInt();
+public:
+    int minEatingSpeed(vector<int>& piles, int h) {
+        int l = 1, r = *max_element(piles.begin(), piles.end());
         while (l < r) {
             int mid = l + (r - l) / 2;
-            if (canFinish(piles, h, mid)) {
-                r = mid;
-            } else {
-                l = mid + 1;
-            }
+            if (canFinish(piles, h, mid)) r = mid;
+            else l = mid + 1;
         }
         return l;
     }
-}
+
+private:
+    bool canFinish(const vector<int>& piles, int h, int speed) {
+        long long hours = 0;
+        for (int pile : piles) {
+            hours += (pile + speed - 1) / speed;
+        }
+        return hours <= h;
+    }
+};
 ```
 
 ```mermaid
@@ -299,7 +340,7 @@ flowchart TD
 
 更稳的写法是：
 
-```java
+```cpp
 int mid = l + (r - l) / 2;
 ```
 

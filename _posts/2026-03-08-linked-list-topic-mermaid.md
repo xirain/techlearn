@@ -125,21 +125,21 @@ flowchart TD
 
 题型定位：链表原地反转。
 
-```java
+```cpp
 class Solution {
-    public ListNode reverseList(ListNode head) {
-        ListNode prev = null;
-        ListNode curr = head;
-
-        while (curr != null) {
-            ListNode next = curr.next;
-            curr.next = prev;
+public:
+    ListNode* reverseList(ListNode* head) {
+        ListNode* prev = nullptr;
+        ListNode* curr = head;
+        while (curr != nullptr) {
+            ListNode* next = curr->next;
+            curr->next = prev;
             prev = curr;
             curr = next;
         }
         return prev;
     }
-}
+};
 ```
 
 ```mermaid
@@ -159,27 +159,26 @@ flowchart LR
 
 题型定位：链表归并。
 
-```java
+```cpp
 class Solution {
-    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
-        ListNode dummy = new ListNode(-1);
-        ListNode tail = dummy;
-
-        while (list1 != null && list2 != null) {
-            if (list1.val < list2.val) {
-                tail.next = list1;
-                list1 = list1.next;
+public:
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+        ListNode dummy(-1);
+        ListNode* tail = &dummy;
+        while (list1 != nullptr && list2 != nullptr) {
+            if (list1->val < list2->val) {
+                tail->next = list1;
+                list1 = list1->next;
             } else {
-                tail.next = list2;
-                list2 = list2.next;
+                tail->next = list2;
+                list2 = list2->next;
             }
-            tail = tail.next;
+            tail = tail->next;
         }
-
-        tail.next = (list1 != null) ? list1 : list2;
+        tail->next = (list1 != nullptr) ? list1 : list2;
         return dummy.next;
     }
-}
+};
 ```
 
 ```mermaid
@@ -200,25 +199,22 @@ flowchart LR
 
 题型定位：快慢指针。
 
-```java
+```cpp
 class Solution {
-    public ListNode removeNthFromEnd(ListNode head, int n) {
-        ListNode dummy = new ListNode(0, head);
-        ListNode fast = dummy, slow = dummy;
-
-        for (int i = 0; i < n; i++) {
-            fast = fast.next;
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode dummy(0, head);
+        ListNode* fast = &dummy;
+        ListNode* slow = &dummy;
+        for (int i = 0; i < n; ++i) fast = fast->next;
+        while (fast->next != nullptr) {
+            fast = fast->next;
+            slow = slow->next;
         }
-
-        while (fast.next != null) {
-            fast = fast.next;
-            slow = slow.next;
-        }
-
-        slow.next = slow.next.next;
+        slow->next = slow->next->next;
         return dummy.next;
     }
-}
+};
 ```
 
 ```mermaid
@@ -237,20 +233,21 @@ flowchart LR
 
 题型定位：判环 / Floyd 快慢指针。
 
-```java
-public class Solution {
-    public boolean hasCycle(ListNode head) {
-        if (head == null || head.next == null) return false;
-        ListNode slow = head, fast = head;
-
-        while (fast != null && fast.next != null) {
-            slow = slow.next;
-            fast = fast.next.next;
+```cpp
+class Solution {
+public:
+    bool hasCycle(ListNode* head) {
+        if (head == nullptr || head->next == nullptr) return false;
+        ListNode* slow = head;
+        ListNode* fast = head;
+        while (fast != nullptr && fast->next != nullptr) {
+            slow = slow->next;
+            fast = fast->next->next;
             if (slow == fast) return true;
         }
         return false;
     }
-}
+};
 ```
 
 ```mermaid

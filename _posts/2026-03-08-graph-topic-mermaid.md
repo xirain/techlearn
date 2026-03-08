@@ -169,14 +169,16 @@ flowchart TD
 
 题型定位：网格图 DFS / BFS。
 
-```java
+```cpp
 class Solution {
-    public int numIslands(char[][] grid) {
-        int m = grid.length, n = grid[0].length, count = 0;
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
+public:
+    int numIslands(vector<vector<char>>& grid) {
+        int m = static_cast<int>(grid.size()), n = static_cast<int>(grid[0].size());
+        int count = 0;
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
                 if (grid[i][j] == '1') {
-                    count++;
+                    ++count;
                     dfs(grid, i, j);
                 }
             }
@@ -184,8 +186,11 @@ class Solution {
         return count;
     }
 
-    private void dfs(char[][] grid, int i, int j) {
-        if (i < 0 || i >= grid.length || j < 0 || j >= grid[0].length || grid[i][j] != '1') {
+private:
+    void dfs(vector<vector<char>>& grid, int i, int j) {
+        if (i < 0 || i >= static_cast<int>(grid.size()) ||
+            j < 0 || j >= static_cast<int>(grid[0].size()) ||
+            grid[i][j] != '1') {
             return;
         }
         grid[i][j] = '0';
@@ -194,7 +199,7 @@ class Solution {
         dfs(grid, i, j + 1);
         dfs(grid, i, j - 1);
     }
-}
+};
 ```
 
 ```mermaid
@@ -213,41 +218,39 @@ flowchart TD
 
 题型定位：多源 BFS。
 
-```java
+```cpp
 class Solution {
-    public int orangesRotting(int[][] grid) {
-        int m = grid.length, n = grid[0].length;
-        Queue<int[]> queue = new LinkedList<>();
+public:
+    int orangesRotting(vector<vector<int>>& grid) {
+        int m = static_cast<int>(grid.size()), n = static_cast<int>(grid[0].size());
+        queue<pair<int, int>> q;
         int fresh = 0;
-
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                if (grid[i][j] == 2) queue.offer(new int[]{i, j});
-                if (grid[i][j] == 1) fresh++;
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (grid[i][j] == 2) q.push({i, j});
+                if (grid[i][j] == 1) ++fresh;
             }
         }
-
         int minutes = 0;
-        int[][] dirs = new int[][] { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };
-
-        while (!queue.isEmpty() && fresh > 0) {
-            int size = queue.size();
-            for (int i = 0; i < size; i++) {
-                int[] cur = queue.poll();
-                for (int[] d : dirs) {
-                    int x = cur[0] + d[0], y = cur[1] + d[1];
-                    if (x >= 0 && x < m && y >= 0 && y < n && grid[x][y] == 1) {
-                        grid[x][y] = 2;
-                        fresh--;
-                        queue.offer(new int[]{x, y});
+        vector<pair<int, int>> dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        while (!q.empty() && fresh > 0) {
+            int size = static_cast<int>(q.size());
+            for (int i = 0; i < size; ++i) {
+                auto [x, y] = q.front(); q.pop();
+                for (auto [dx, dy] : dirs) {
+                    int nx = x + dx, ny = y + dy;
+                    if (nx >= 0 && nx < m && ny >= 0 && ny < n && grid[nx][ny] == 1) {
+                        grid[nx][ny] = 2;
+                        --fresh;
+                        q.push({nx, ny});
                     }
                 }
             }
-            minutes++;
+            ++minutes;
         }
         return fresh == 0 ? minutes : -1;
     }
-}
+};
 ```
 
 ```mermaid
@@ -266,34 +269,31 @@ flowchart TD
 
 题型定位：拓扑排序 / 判环。
 
-```java
+```cpp
 class Solution {
-    public boolean canFinish(int numCourses, int[][] prerequisites) {
-        List<List<Integer>> graph = new ArrayList<>();
-        for (int i = 0; i < numCourses; i++) graph.add(new ArrayList<>());
-        int[] indegree = new int[numCourses];
-
-        for (int[] p : prerequisites) {
-            graph.get(p[1]).add(p[0]);
-            indegree[p[0]]++;
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<vector<int>> graph(numCourses);
+        vector<int> indegree(numCourses, 0);
+        for (const auto& p : prerequisites) {
+            graph[p[1]].push_back(p[0]);
+            ++indegree[p[0]];
         }
-
-        Queue<Integer> queue = new LinkedList<>();
-        for (int i = 0; i < numCourses; i++) {
-            if (indegree[i] == 0) queue.offer(i);
+        queue<int> q;
+        for (int i = 0; i < numCourses; ++i) {
+            if (indegree[i] == 0) q.push(i);
         }
-
         int count = 0;
-        while (!queue.isEmpty()) {
-            int cur = queue.poll();
-            count++;
-            for (int next : graph.get(cur)) {
-                if (--indegree[next] == 0) queue.offer(next);
+        while (!q.empty()) {
+            int cur = q.front(); q.pop();
+            ++count;
+            for (int next : graph[cur]) {
+                if (--indegree[next] == 0) q.push(next);
             }
         }
         return count == numCourses;
     }
-}
+};
 ```
 
 ```mermaid
@@ -314,22 +314,42 @@ flowchart TD
 
 题型定位：并查集 / 连通块。
 
-```java
-class Solution {
-    public int findCircleNum(int[][] isConnected) {
-        int n = isConnected.length;
-        UnionFind uf = new UnionFind(n);
+```cpp
+class UnionFind {
+public:
+    int count;
+    vector<int> parent;
 
-        for (int i = 0; i < n; i++) {
-            for (int j = i + 1; j < n; j++) {
-                if (isConnected[i][j] == 1) {
-                    uf.union(i, j);
-                }
+    explicit UnionFind(int n) : count(n), parent(n) {
+        iota(parent.begin(), parent.end(), 0);
+    }
+
+    int find(int x) {
+        if (parent[x] != x) parent[x] = find(parent[x]);
+        return parent[x];
+    }
+
+    void unite(int a, int b) {
+        int pa = find(a), pb = find(b);
+        if (pa == pb) return;
+        parent[pa] = pb;
+        --count;
+    }
+};
+
+class Solution {
+public:
+    int findCircleNum(vector<vector<int>>& isConnected) {
+        int n = static_cast<int>(isConnected.size());
+        UnionFind uf(n);
+        for (int i = 0; i < n; ++i) {
+            for (int j = i + 1; j < n; ++j) {
+                if (isConnected[i][j] == 1) uf.unite(i, j);
             }
         }
         return uf.count;
     }
-}
+};
 ```
 
 ```mermaid

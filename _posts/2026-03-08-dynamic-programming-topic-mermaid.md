@@ -142,19 +142,20 @@ flowchart LR
 
 从小到大。
 
-```java
+```cpp
 class Solution {
-    public int climbStairs(int n) {
+public:
+    int climbStairs(int n) {
         if (n <= 2) return n;
-        int[] dp = new int[n + 1];
+        vector<int> dp(n + 1, 0);
         dp[1] = 1;
         dp[2] = 2;
-        for (int i = 3; i <= n; i++) {
+        for (int i = 3; i <= n; ++i) {
             dp[i] = dp[i - 1] + dp[i - 2];
         }
         return dp[n];
     }
-}
+};
 ```
 
 这题几乎就是动态规划四步法的标准模板。
@@ -203,21 +204,19 @@ flowchart TD
     B["dp[i][j-1]"] --> C
 ```
 
-```java
+```cpp
 class Solution {
-    public int uniquePaths(int m, int n) {
-        int[][] dp = new int[m][n];
-        for (int i = 0; i < m; i++) dp[i][0] = 1;
-        for (int j = 0; j < n; j++) dp[0][j] = 1;
-
-        for (int i = 1; i < m; i++) {
-            for (int j = 1; j < n; j++) {
+public:
+    int uniquePaths(int m, int n) {
+        vector<vector<int>> dp(m, vector<int>(n, 1));
+        for (int i = 1; i < m; ++i) {
+            for (int j = 1; j < n; ++j) {
                 dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
             }
         }
         return dp[m - 1][n - 1];
     }
-}
+};
 ```
 
 这题练的是：
@@ -248,25 +247,23 @@ flowchart TD
     C -->|否| E[保持原值]
 ```
 
-```java
+```cpp
 class Solution {
-    public boolean canPartition(int[] nums) {
-        int sum = 0;
-        for (int num : nums) sum += num;
-        if ((sum & 1) == 1) return false;
-
+public:
+    bool canPartition(vector<int>& nums) {
+        int sum = accumulate(nums.begin(), nums.end(), 0);
+        if (sum % 2 != 0) return false;
         int target = sum / 2;
-        boolean[] dp = new boolean[target + 1];
+        vector<bool> dp(target + 1, false);
         dp[0] = true;
-
         for (int num : nums) {
-            for (int j = target; j >= num; j--) {
+            for (int j = target; j >= num; --j) {
                 dp[j] = dp[j] || dp[j - num];
             }
         }
         return dp[target];
     }
-}
+};
 ```
 
 这题练的是：
@@ -296,25 +293,24 @@ flowchart TD
     B -->|否| D[跳过]
 ```
 
-```java
+```cpp
 class Solution {
-    public int lengthOfLIS(int[] nums) {
-        int n = nums.length;
-        int[] dp = new int[n];
-        Arrays.fill(dp, 1);
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        int n = static_cast<int>(nums.size());
+        vector<int> dp(n, 1);
         int ans = 1;
-
-        for (int i = 1; i < n; i++) {
-            for (int j = 0; j < i; j++) {
+        for (int i = 1; i < n; ++i) {
+            for (int j = 0; j < i; ++j) {
                 if (nums[j] < nums[i]) {
-                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                    dp[i] = max(dp[i], dp[j] + 1);
                 }
             }
-            ans = Math.max(ans, dp[i]);
+            ans = max(ans, dp[i]);
         }
         return ans;
     }
-}
+};
 ```
 
 这题练的是：

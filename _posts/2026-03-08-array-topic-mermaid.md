@@ -107,19 +107,20 @@ flowchart TD
 
 题型定位：快慢指针 / 原地覆盖。
 
-```java
+```cpp
 class Solution {
-    public int removeDuplicates(int[] nums) {
-        if (nums.length == 0) return 0;
+public:
+    int removeDuplicates(vector<int>& nums) {
+        if (nums.empty()) return 0;
         int slow = 1;
-        for (int fast = 1; fast < nums.length; fast++) {
+        for (int fast = 1; fast < static_cast<int>(nums.size()); ++fast) {
             if (nums[fast] != nums[fast - 1]) {
                 nums[slow++] = nums[fast];
             }
         }
         return slow;
     }
-}
+};
 ```
 
 ```mermaid
@@ -139,20 +140,18 @@ flowchart TD
 
 题型定位：数组稳定重排。
 
-```java
+```cpp
 class Solution {
-    public void moveZeroes(int[] nums) {
+public:
+    void moveZeroes(vector<int>& nums) {
         int slow = 0;
-        for (int fast = 0; fast < nums.length; fast++) {
+        for (int fast = 0; fast < static_cast<int>(nums.size()); ++fast) {
             if (nums[fast] != 0) {
-                int temp = nums[slow];
-                nums[slow] = nums[fast];
-                nums[fast] = temp;
-                slow++;
+                swap(nums[slow++], nums[fast]);
             }
         }
     }
-}
+};
 ```
 
 ```mermaid
@@ -172,18 +171,20 @@ flowchart TD
 
 题型定位：左右双指针。
 
-```java
+```cpp
 class Solution {
-    public int maxArea(int[] height) {
-        int l = 0, r = height.length - 1, ans = 0;
+public:
+    int maxArea(vector<int>& height) {
+        int l = 0, r = static_cast<int>(height.size()) - 1;
+        int ans = 0;
         while (l < r) {
-            ans = Math.max(ans, (r - l) * Math.min(height[l], height[r]));
-            if (height[l] < height[r]) l++;
-            else r--;
+            ans = max(ans, (r - l) * min(height[l], height[r]));
+            if (height[l] < height[r]) ++l;
+            else --r;
         }
         return ans;
     }
-}
+};
 ```
 
 ```mermaid
@@ -203,25 +204,23 @@ flowchart TD
 
 题型定位：前后缀。
 
-```java
+```cpp
 class Solution {
-    public int[] productExceptSelf(int[] nums) {
-        int n = nums.length;
-        int[] res = new int[n];
-        res[0] = 1;
-
-        for (int i = 1; i < n; i++) {
+public:
+    vector<int> productExceptSelf(vector<int>& nums) {
+        int n = static_cast<int>(nums.size());
+        vector<int> res(n, 1);
+        for (int i = 1; i < n; ++i) {
             res[i] = res[i - 1] * nums[i - 1];
         }
-
         int right = 1;
-        for (int i = n - 1; i >= 0; i--) {
+        for (int i = n - 1; i >= 0; --i) {
             res[i] *= right;
             right *= nums[i];
         }
         return res;
     }
-}
+};
 ```
 
 ```mermaid

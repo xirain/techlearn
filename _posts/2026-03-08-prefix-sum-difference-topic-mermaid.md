@@ -98,21 +98,21 @@ flowchart LR
 
 题型定位：一维前缀和基础。
 
-```java
+```cpp
 class NumArray {
-    private int[] prefix;
+public:
+    vector<int> prefix;
 
-    public NumArray(int[] nums) {
-        prefix = new int[nums.length + 1];
-        for (int i = 0; i < nums.length; i++) {
+    explicit NumArray(vector<int>& nums) : prefix(nums.size() + 1, 0) {
+        for (int i = 0; i < static_cast<int>(nums.size()); ++i) {
             prefix[i + 1] = prefix[i] + nums[i];
         }
     }
 
-    public int sumRange(int left, int right) {
+    int sumRange(int left, int right) {
         return prefix[right + 1] - prefix[left];
     }
-}
+};
 ```
 
 ```mermaid
@@ -130,21 +130,21 @@ flowchart TD
 
 题型定位：前缀和 + 哈希。
 
-```java
+```cpp
 class Solution {
-    public int subarraySum(int[] nums, int k) {
-        Map<Integer, Integer> map = new HashMap<>();
-        map.put(0, 1);
+public:
+    int subarraySum(vector<int>& nums, int k) {
+        unordered_map<int, int> cnt;
+        cnt[0] = 1;
         int sum = 0, ans = 0;
-
         for (int num : nums) {
             sum += num;
-            ans += map.getOrDefault(sum - k, 0);
-            map.put(sum, map.getOrDefault(sum, 0) + 1);
+            if (cnt.count(sum - k)) ans += cnt[sum - k];
+            ++cnt[sum];
         }
         return ans;
     }
-}
+};
 ```
 
 ```mermaid
@@ -189,17 +189,16 @@ flowchart TD
 
 题型定位：差分数组。
 
-```java
+```cpp
 class Solution {
-    public boolean carPooling(int[][] trips, int capacity) {
-        int[] diff = new int[1001];
-
-        for (int[] trip : trips) {
+public:
+    bool carPooling(vector<vector<int>>& trips, int capacity) {
+        vector<int> diff(1001, 0);
+        for (const auto& trip : trips) {
             int num = trip[0], from = trip[1], to = trip[2];
             diff[from] += num;
             diff[to] -= num;
         }
-
         int cur = 0;
         for (int x : diff) {
             cur += x;
@@ -207,7 +206,7 @@ class Solution {
         }
         return true;
     }
-}
+};
 ```
 
 ```mermaid

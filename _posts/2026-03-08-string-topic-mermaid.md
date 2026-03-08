@@ -143,22 +143,24 @@ mindmap
 
 题型定位：左右双指针。
 
-```java
+```cpp
 class Solution {
-    public boolean isPalindrome(String s) {
-        int l = 0, r = s.length() - 1;
+public:
+    bool isPalindrome(string s) {
+        int l = 0, r = static_cast<int>(s.size()) - 1;
         while (l < r) {
-            while (l < r && !Character.isLetterOrDigit(s.charAt(l))) l++;
-            while (l < r && !Character.isLetterOrDigit(s.charAt(r))) r--;
-            if (Character.toLowerCase(s.charAt(l)) != Character.toLowerCase(s.charAt(r))) {
+            while (l < r && !isalnum(static_cast<unsigned char>(s[l]))) ++l;
+            while (l < r && !isalnum(static_cast<unsigned char>(s[r]))) --r;
+            if (tolower(static_cast<unsigned char>(s[l])) !=
+                tolower(static_cast<unsigned char>(s[r]))) {
                 return false;
             }
-            l++;
-            r--;
+            ++l;
+            --r;
         }
         return true;
     }
-}
+};
 ```
 
 ```mermaid
@@ -179,22 +181,22 @@ flowchart LR
 
 题型定位：滑动窗口。
 
-```java
+```cpp
 class Solution {
-    public int lengthOfLongestSubstring(String s) {
-        Set<Character> set = new HashSet<>();
-        int l = 0, ans = 0;
-
-        for (int r = 0; r < s.length(); r++) {
-            while (set.contains(s.charAt(r))) {
-                set.remove(s.charAt(l++));
+public:
+    int lengthOfLongestSubstring(string s) {
+        unordered_set<char> window;
+        int ans = 0;
+        for (int l = 0, r = 0; r < static_cast<int>(s.size()); ++r) {
+            while (window.count(s[r])) {
+                window.erase(s[l++]);
             }
-            set.add(s.charAt(r));
-            ans = Math.max(ans, r - l + 1);
+            window.insert(s[r]);
+            ans = max(ans, r - l + 1);
         }
         return ans;
     }
-}
+};
 ```
 
 ```mermaid
@@ -214,29 +216,23 @@ flowchart TD
 
 题型定位：固定长度滑动窗口。
 
-```java
+```cpp
 class Solution {
-    public List<Integer> findAnagrams(String s, String p) {
-        List<Integer> res = new ArrayList<>();
-        if (s.length() < p.length()) return res;
-
-        int[] need = new int[26];
-        int[] win = new int[26];
-        for (char c : p.toCharArray()) need[c - 'a']++;
-
-        int k = p.length();
-        for (int i = 0; i < s.length(); i++) {
-            win[s.charAt(i) - 'a']++;
-            if (i >= k) {
-                win[s.charAt(i - k) - 'a']--;
-            }
-            if (Arrays.equals(need, win)) {
-                res.add(i - k + 1);
-            }
+public:
+    vector<int> findAnagrams(string s, string p) {
+        vector<int> res;
+        if (s.size() < p.size()) return res;
+        vector<int> need(26, 0), window(26, 0);
+        for (char c : p) ++need[c - 'a'];
+        int k = static_cast<int>(p.size());
+        for (int i = 0; i < static_cast<int>(s.size()); ++i) {
+            ++window[s[i] - 'a'];
+            if (i >= k) --window[s[i - k] - 'a'];
+            if (window == need) res.push_back(i - k + 1);
         }
         return res;
     }
-}
+};
 ```
 
 ```mermaid
@@ -256,32 +252,33 @@ flowchart TD
 
 题型定位：中心扩展。
 
-```java
+```cpp
 class Solution {
-    public String longestPalindrome(String s) {
-        if (s == null || s.length() < 2) return s;
-        int start = 0, maxLen = 1;
-
-        for (int i = 0; i < s.length(); i++) {
+public:
+    string longestPalindrome(string s) {
+        if (s.size() < 2) return s;
+        int start = 0, max_len = 1;
+        for (int i = 0; i < static_cast<int>(s.size()); ++i) {
             int len1 = expand(s, i, i);
             int len2 = expand(s, i, i + 1);
-            int len = Math.max(len1, len2);
-            if (len > maxLen) {
-                maxLen = len;
+            int len = max(len1, len2);
+            if (len > max_len) {
+                max_len = len;
                 start = i - (len - 1) / 2;
             }
         }
-        return s.substring(start, start + maxLen);
+        return s.substr(start, max_len);
     }
 
-    private int expand(String s, int l, int r) {
-        while (l >= 0 && r < s.length() && s.charAt(l) == s.charAt(r)) {
-            l--;
-            r++;
+private:
+    int expand(const string& s, int l, int r) {
+        while (l >= 0 && r < static_cast<int>(s.size()) && s[l] == s[r]) {
+            --l;
+            ++r;
         }
         return r - l - 1;
     }
-}
+};
 ```
 
 ```mermaid

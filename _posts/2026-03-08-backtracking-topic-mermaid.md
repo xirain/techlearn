@@ -120,17 +120,17 @@ flowchart TD
 
 最通用的回溯模板如下：
 
-```java
-void backtrack(参数) {
-    if (满足结束条件) {
-        记录结果;
+```cpp
+void backtrack(/* ?? */) {
+    if (??????) {
+        ????;
         return;
     }
 
-    for (选择 : 当前层可选集合) {
-        做选择;
-        backtrack(下一层参数);
-        撤销选择;
+    for (auto choice : ???????) {
+        ???;
+        backtrack(/* ????? */);
+        ????;
     }
 }
 ```
@@ -267,26 +267,24 @@ mindmap
 
 核心：每到一个节点，当前路径本身就是一个答案。
 
-```java
+```cpp
 class Solution {
-    List<List<Integer>> res = new ArrayList<>();
-    List<Integer> path = new ArrayList<>();
-
-    public List<List<Integer>> subsets(int[] nums) {
-        backtrack(nums, 0);
+public:
+    vector<vector<int>> subsets(vector<int>& nums) {
+        vector<vector<int>> res;
+        vector<int> path;
+        function<void(int)> dfs = [&](int start) {
+            res.push_back(path);
+            for (int i = start; i < static_cast<int>(nums.size()); ++i) {
+                path.push_back(nums[i]);
+                dfs(i + 1);
+                path.pop_back();
+            }
+        };
+        dfs(0);
         return res;
     }
-
-    private void backtrack(int[] nums, int start) {
-        res.add(new ArrayList<>(path));
-
-        for (int i = start; i < nums.length; i++) {
-            path.add(nums[i]);
-            backtrack(nums, i + 1);
-            path.remove(path.size() - 1);
-        }
-    }
-}
+};
 ```
 
 ```mermaid
@@ -312,29 +310,27 @@ flowchart TD
 
 核心：从 `[1..n]` 中选出 `k` 个数，不关心顺序。
 
-```java
+```cpp
 class Solution {
-    List<List<Integer>> res = new ArrayList<>();
-    List<Integer> path = new ArrayList<>();
-
-    public List<List<Integer>> combine(int n, int k) {
-        backtrack(n, k, 1);
+public:
+    vector<vector<int>> combine(int n, int k) {
+        vector<vector<int>> res;
+        vector<int> path;
+        function<void(int)> dfs = [&](int start) {
+            if (static_cast<int>(path.size()) == k) {
+                res.push_back(path);
+                return;
+            }
+            for (int i = start; i <= n; ++i) {
+                path.push_back(i);
+                dfs(i + 1);
+                path.pop_back();
+            }
+        };
+        dfs(1);
         return res;
     }
-
-    private void backtrack(int n, int k, int start) {
-        if (path.size() == k) {
-            res.add(new ArrayList<>(path));
-            return;
-        }
-
-        for (int i = start; i <= n; i++) {
-            path.add(i);
-            backtrack(n, k, i + 1);
-            path.remove(path.size() - 1);
-        }
-    }
-}
+};
 ```
 
 ### 组合题的经典剪枝
@@ -361,34 +357,31 @@ flowchart TD
 
 核心：顺序不同就是不同答案，因此每一层都从未使用元素里选。
 
-```java
+```cpp
 class Solution {
-    List<List<Integer>> res = new ArrayList<>();
-    List<Integer> path = new ArrayList<>();
-    boolean[] used;
-
-    public List<List<Integer>> permute(int[] nums) {
-        used = new boolean[nums.length];
-        backtrack(nums);
+public:
+    vector<vector<int>> permute(vector<int>& nums) {
+        vector<vector<int>> res;
+        vector<int> path;
+        vector<bool> used(nums.size(), false);
+        function<void()> dfs = [&]() {
+            if (path.size() == nums.size()) {
+                res.push_back(path);
+                return;
+            }
+            for (int i = 0; i < static_cast<int>(nums.size()); ++i) {
+                if (used[i]) continue;
+                used[i] = true;
+                path.push_back(nums[i]);
+                dfs();
+                path.pop_back();
+                used[i] = false;
+            }
+        };
+        dfs();
         return res;
     }
-
-    private void backtrack(int[] nums) {
-        if (path.size() == nums.length) {
-            res.add(new ArrayList<>(path));
-            return;
-        }
-
-        for (int i = 0; i < nums.length; i++) {
-            if (used[i]) continue;
-            used[i] = true;
-            path.add(nums[i]);
-            backtrack(nums);
-            path.remove(path.size() - 1);
-            used[i] = false;
-        }
-    }
-}
+};
 ```
 
 ```mermaid
@@ -414,32 +407,29 @@ flowchart TD
 
 核心：元素可重复使用，但路径和不能超过 `target`。
 
-```java
+```cpp
 class Solution {
-    List<List<Integer>> res = new ArrayList<>();
-    List<Integer> path = new ArrayList<>();
-
-    public List<List<Integer>> combinationSum(int[] candidates, int target) {
-        Arrays.sort(candidates);
-        backtrack(candidates, target, 0, 0);
+public:
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        sort(candidates.begin(), candidates.end());
+        vector<vector<int>> res;
+        vector<int> path;
+        function<void(int, int)> dfs = [&](int start, int sum) {
+            if (sum == target) {
+                res.push_back(path);
+                return;
+            }
+            for (int i = start; i < static_cast<int>(candidates.size()); ++i) {
+                if (sum + candidates[i] > target) break;
+                path.push_back(candidates[i]);
+                dfs(i, sum + candidates[i]);
+                path.pop_back();
+            }
+        };
+        dfs(0, 0);
         return res;
     }
-
-    private void backtrack(int[] candidates, int target, int start, int sum) {
-        if (sum == target) {
-            res.add(new ArrayList<>(path));
-            return;
-        }
-
-        for (int i = start; i < candidates.length; i++) {
-            if (sum + candidates[i] > target) break;
-
-            path.add(candidates[i]);
-            backtrack(candidates, target, i, sum + candidates[i]);
-            path.remove(path.size() - 1);
-        }
-    }
-}
+};
 ```
 
 ```mermaid
@@ -510,7 +500,7 @@ flowchart TD
 
 ## 5）结果集直接存 `path`
 
-必须存 `new ArrayList<>(path)` 的拷贝，否则后续回溯会把结果改掉。
+必须存 `path` 的拷贝，例如 `res.push_back(path)`，否则后续回溯会把结果改掉。
 
 ---
 

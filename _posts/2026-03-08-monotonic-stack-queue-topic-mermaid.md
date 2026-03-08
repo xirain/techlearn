@@ -126,26 +126,26 @@ flowchart LR
 
 题型定位：单调栈基础题。
 
-```java
+```cpp
 class Solution {
-    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
-        Map<Integer, Integer> map = new HashMap<>();
-        Deque<Integer> stack = new ArrayDeque<>();
-
+public:
+    vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
+        unordered_map<int, int> next_greater;
+        vector<int> st;
         for (int num : nums2) {
-            while (!stack.isEmpty() && stack.peek() < num) {
-                map.put(stack.pop(), num);
+            while (!st.empty() && st.back() < num) {
+                next_greater[st.back()] = num;
+                st.pop_back();
             }
-            stack.push(num);
+            st.push_back(num);
         }
-
-        int[] res = new int[nums1.length];
-        for (int i = 0; i < nums1.length; i++) {
-            res[i] = map.getOrDefault(nums1[i], -1);
+        vector<int> res;
+        for (int num : nums1) {
+            res.push_back(next_greater.count(num) ? next_greater[num] : -1);
         }
         return res;
     }
-}
+};
 ```
 
 ```mermaid
@@ -165,23 +165,24 @@ flowchart TD
 
 题型定位：单调栈 + 下标。
 
-```java
+```cpp
 class Solution {
-    public int[] dailyTemperatures(int[] temperatures) {
-        int n = temperatures.length;
-        int[] res = new int[n];
-        Deque<Integer> stack = new ArrayDeque<>();
-
-        for (int i = 0; i < n; i++) {
-            while (!stack.isEmpty() && temperatures[stack.peek()] < temperatures[i]) {
-                int idx = stack.pop();
+public:
+    vector<int> dailyTemperatures(vector<int>& temperatures) {
+        int n = static_cast<int>(temperatures.size());
+        vector<int> res(n, 0);
+        vector<int> st;
+        for (int i = 0; i < n; ++i) {
+            while (!st.empty() && temperatures[st.back()] < temperatures[i]) {
+                int idx = st.back();
+                st.pop_back();
                 res[idx] = i - idx;
             }
-            stack.push(i);
+            st.push_back(i);
         }
         return res;
     }
-}
+};
 ```
 
 ```mermaid
@@ -204,27 +205,27 @@ flowchart TD
 
 核心：当某根柱子出栈时，说明它左右两侧第一个更小元素已经确定，于是可以计算以它为高的最大矩形面积。
 
-```java
+```cpp
 class Solution {
-    public int largestRectangleArea(int[] heights) {
-        int n = heights.length;
-        int[] newHeights = new int[n + 2];
-        System.arraycopy(heights, 0, newHeights, 1, n);
-        Deque<Integer> stack = new ArrayDeque<>();
+public:
+    int largestRectangleArea(vector<int>& heights) {
+        vector<int> h(heights.size() + 2, 0);
+        copy(heights.begin(), heights.end(), h.begin() + 1);
+        vector<int> st;
         int ans = 0;
-
-        for (int i = 0; i < newHeights.length; i++) {
-            while (!stack.isEmpty() && newHeights[stack.peek()] > newHeights[i]) {
-                int h = newHeights[stack.pop()];
-                int left = stack.peek();
+        for (int i = 0; i < static_cast<int>(h.size()); ++i) {
+            while (!st.empty() && h[st.back()] > h[i]) {
+                int height = h[st.back()];
+                st.pop_back();
+                int left = st.back();
                 int width = i - left - 1;
-                ans = Math.max(ans, h * width);
+                ans = max(ans, height * width);
             }
-            stack.push(i);
+            st.push_back(i);
         }
         return ans;
     }
-}
+};
 ```
 
 ```mermaid
@@ -244,30 +245,21 @@ flowchart TD
 
 题型定位：单调队列。
 
-```java
+```cpp
 class Solution {
-    public int[] maxSlidingWindow(int[] nums, int k) {
-        Deque<Integer> deque = new ArrayDeque<>();
-        int[] res = new int[nums.length - k + 1];
-        int idx = 0;
-
-        for (int i = 0; i < nums.length; i++) {
-            while (!deque.isEmpty() && nums[deque.peekLast()] <= nums[i]) {
-                deque.pollLast();
-            }
-            deque.offerLast(i);
-
-            if (deque.peekFirst() <= i - k) {
-                deque.pollFirst();
-            }
-
-            if (i >= k - 1) {
-                res[idx++] = nums[deque.peekFirst()];
-            }
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        deque<int> dq;
+        vector<int> res;
+        for (int i = 0; i < static_cast<int>(nums.size()); ++i) {
+            while (!dq.empty() && nums[dq.back()] <= nums[i]) dq.pop_back();
+            dq.push_back(i);
+            if (dq.front() <= i - k) dq.pop_front();
+            if (i >= k - 1) res.push_back(nums[dq.front()]);
         }
         return res;
     }
-}
+};
 ```
 
 ```mermaid

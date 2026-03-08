@@ -139,10 +139,10 @@ flowchart TD
 
 那么代码几乎自动出来：
 
-```java
-int maxDepth(TreeNode root) {
-    if (root == null) return 0;
-    return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;
+```cpp
+int maxDepth(TreeNode* root) {
+    if (root == nullptr) return 0;
+    return max(maxDepth(root->left), maxDepth(root->right)) + 1;
 }
 ```
 
@@ -187,13 +187,14 @@ mindmap
 
 题型定位：树高 / 后序汇总。
 
-```java
+```cpp
 class Solution {
-    public int maxDepth(TreeNode root) {
-        if (root == null) return 0;
-        return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;
+public:
+    int maxDepth(TreeNode* root) {
+        if (root == nullptr) return 0;
+        return max(maxDepth(root->left), maxDepth(root->right)) + 1;
     }
-}
+};
 ```
 
 ```mermaid
@@ -216,17 +217,18 @@ flowchart TD
 
 题型定位：树的结构变换。
 
-```java
+```cpp
 class Solution {
-    public TreeNode invertTree(TreeNode root) {
-        if (root == null) return null;
-        TreeNode left = invertTree(root.left);
-        TreeNode right = invertTree(root.right);
-        root.left = right;
-        root.right = left;
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        if (root == nullptr) return nullptr;
+        TreeNode* left = invertTree(root->left);
+        TreeNode* right = invertTree(root->right);
+        root->left = right;
+        root->right = left;
         return root;
     }
-}
+};
 ```
 
 ```mermaid
@@ -246,30 +248,28 @@ flowchart TD
 
 题型定位：树的 BFS。
 
-```java
+```cpp
 class Solution {
-    public List<List<Integer>> levelOrder(TreeNode root) {
-        List<List<Integer>> res = new ArrayList<>();
-        if (root == null) return res;
-
-        Queue<TreeNode> queue = new LinkedList<>();
-        queue.offer(root);
-
-        while (!queue.isEmpty()) {
-            int size = queue.size();
-            List<Integer> level = new ArrayList<>();
-
-            for (int i = 0; i < size; i++) {
-                TreeNode node = queue.poll();
-                level.add(node.val);
-                if (node.left != null) queue.offer(node.left);
-                if (node.right != null) queue.offer(node.right);
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> res;
+        if (root == nullptr) return res;
+        queue<TreeNode*> q;
+        q.push(root);
+        while (!q.empty()) {
+            int size = static_cast<int>(q.size());
+            vector<int> level;
+            for (int i = 0; i < size; ++i) {
+                TreeNode* node = q.front(); q.pop();
+                level.push_back(node->val);
+                if (node->left != nullptr) q.push(node->left);
+                if (node->right != nullptr) q.push(node->right);
             }
-            res.add(level);
+            res.push_back(level);
         }
         return res;
     }
-}
+};
 ```
 
 ```mermaid
@@ -289,18 +289,25 @@ flowchart TD
 
 解法一可以用上下界递归；这里展示更直观的中序有序思路。
 
-```java
+```cpp
 class Solution {
-    Long prev = null;
-
-    public boolean isValidBST(TreeNode root) {
-        if (root == null) return true;
-        if (!isValidBST(root.left)) return false;
-        if (prev != null && root.val <= prev) return false;
-        prev = (long) root.val;
-        return isValidBST(root.right);
+public:
+    bool isValidBST(TreeNode* root) {
+        long long prev = LLONG_MIN;
+        bool first = true;
+        return inorder(root, first, prev);
     }
-}
+
+private:
+    bool inorder(TreeNode* node, bool& first, long long& prev) {
+        if (node == nullptr) return true;
+        if (!inorder(node->left, first, prev)) return false;
+        if (!first && node->val <= prev) return false;
+        first = false;
+        prev = node->val;
+        return inorder(node->right, first, prev);
+    }
+};
 ```
 
 ```mermaid

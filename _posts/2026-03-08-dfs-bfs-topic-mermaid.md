@@ -196,13 +196,14 @@ flowchart TD
 
 题型定位：树的 DFS。
 
-```java
+```cpp
 class Solution {
-    public int maxDepth(TreeNode root) {
-        if (root == null) return 0;
-        return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;
+public:
+    int maxDepth(TreeNode* root) {
+        if (root == nullptr) return 0;
+        return max(maxDepth(root->left), maxDepth(root->right)) + 1;
     }
-}
+};
 ```
 
 ```mermaid
@@ -228,16 +229,16 @@ flowchart TD
 
 DFS 写法：
 
-```java
+```cpp
 class Solution {
-    public int numIslands(char[][] grid) {
-        int m = grid.length, n = grid[0].length;
+public:
+    int numIslands(vector<vector<char>>& grid) {
+        int m = static_cast<int>(grid.size()), n = static_cast<int>(grid[0].size());
         int count = 0;
-
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
                 if (grid[i][j] == '1') {
-                    count++;
+                    ++count;
                     dfs(grid, i, j);
                 }
             }
@@ -245,8 +246,11 @@ class Solution {
         return count;
     }
 
-    private void dfs(char[][] grid, int i, int j) {
-        if (i < 0 || i >= grid.length || j < 0 || j >= grid[0].length || grid[i][j] != '1') {
+private:
+    void dfs(vector<vector<char>>& grid, int i, int j) {
+        if (i < 0 || i >= static_cast<int>(grid.size()) ||
+            j < 0 || j >= static_cast<int>(grid[0].size()) ||
+            grid[i][j] != '1') {
             return;
         }
         grid[i][j] = '0';
@@ -255,7 +259,7 @@ class Solution {
         dfs(grid, i, j + 1);
         dfs(grid, i, j - 1);
     }
-}
+};
 ```
 
 ```mermaid
@@ -276,30 +280,28 @@ flowchart TD
 
 题型定位：树的 BFS。
 
-```java
+```cpp
 class Solution {
-    public List<List<Integer>> levelOrder(TreeNode root) {
-        List<List<Integer>> res = new ArrayList<>();
-        if (root == null) return res;
-
-        Queue<TreeNode> queue = new LinkedList<>();
-        queue.offer(root);
-
-        while (!queue.isEmpty()) {
-            int size = queue.size();
-            List<Integer> level = new ArrayList<>();
-
-            for (int i = 0; i < size; i++) {
-                TreeNode node = queue.poll();
-                level.add(node.val);
-                if (node.left != null) queue.offer(node.left);
-                if (node.right != null) queue.offer(node.right);
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> res;
+        if (root == nullptr) return res;
+        queue<TreeNode*> q;
+        q.push(root);
+        while (!q.empty()) {
+            int size = static_cast<int>(q.size());
+            vector<int> level;
+            for (int i = 0; i < size; ++i) {
+                TreeNode* node = q.front(); q.pop();
+                level.push_back(node->val);
+                if (node->left != nullptr) q.push(node->left);
+                if (node->right != nullptr) q.push(node->right);
             }
-            res.add(level);
+            res.push_back(level);
         }
         return res;
     }
-}
+};
 ```
 
 ```mermaid
@@ -320,36 +322,47 @@ flowchart TD
 
 题型定位：无权图最短步数 BFS。
 
-```java
+```cpp
 class Solution {
-    public int openLock(String[] deadends, String target) {
-        Set<String> dead = new HashSet<>(Arrays.asList(deadends));
-        if (dead.contains("0000")) return -1;
+public:
+    int openLock(vector<string>& deadends, string target) {
+        unordered_set<string> dead(deadends.begin(), deadends.end());
+        if (dead.count("0000")) return -1;
 
-        Queue<String> queue = new LinkedList<>();
-        Set<String> visited = new HashSet<>();
-        queue.offer("0000");
-        visited.add("0000");
+        queue<string> q;
+        unordered_set<string> visited;
+        q.push("0000");
+        visited.insert("0000");
         int steps = 0;
 
-        while (!queue.isEmpty()) {
-            int size = queue.size();
-            for (int i = 0; i < size; i++) {
-                String cur = queue.poll();
-                if (cur.equals(target)) return steps;
-                if (dead.contains(cur)) continue;
-
-                for (String next : neighbors(cur)) {
-                    if (visited.add(next)) {
-                        queue.offer(next);
-                    }
+        while (!q.empty()) {
+            int size = static_cast<int>(q.size());
+            for (int i = 0; i < size; ++i) {
+                string cur = q.front(); q.pop();
+                if (cur == target) return steps;
+                if (dead.count(cur)) continue;
+                for (string next : neighbors(cur)) {
+                    if (visited.insert(next).second) q.push(next);
                 }
             }
-            steps++;
+            ++steps;
         }
         return -1;
     }
-}
+
+private:
+    vector<string> neighbors(const string& s) {
+        vector<string> res;
+        for (int i = 0; i < 4; ++i) {
+            string up = s, down = s;
+            up[i] = (s[i] == '9') ? '0' : s[i] + 1;
+            down[i] = (s[i] == '0') ? '9' : s[i] - 1;
+            res.push_back(up);
+            res.push_back(down);
+        }
+        return res;
+    }
+};
 ```
 
 ```mermaid

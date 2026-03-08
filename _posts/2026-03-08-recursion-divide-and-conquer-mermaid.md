@@ -60,7 +60,7 @@ flowchart TD
 
 没有终止条件，递归就不会停。
 
-```java
+```cpp
 int factorial(int n) {
     if (n == 0) return 1;
     return n * factorial(n - 1);
@@ -234,10 +234,9 @@ flowchart TD
     G1 --> G2["[1,2,3,4,5,6,7,8]"]
 ```
 
-```java
-void mergeSort(int[] nums, int left, int right, int[] temp) {
+```cpp
+void mergeSort(vector<int>& nums, int left, int right, vector<int>& temp) {
     if (left >= right) return;
-
     int mid = left + (right - left) / 2;
     mergeSort(nums, left, mid, temp);
     mergeSort(nums, mid + 1, right, temp);
@@ -263,28 +262,27 @@ void mergeSort(int[] nums, int left, int right, int[] temp) {
 
 递归版：
 
-```java
-void preorder(TreeNode root) {
-    if (root == null) return;
+```cpp
+void preorder(TreeNode* root) {
+    if (root == nullptr) return;
     visit(root);
-    preorder(root.left);
-    preorder(root.right);
+    preorder(root->left);
+    preorder(root->right);
 }
 ```
 
 迭代版：
 
-```java
-void preorder(TreeNode root) {
-    if (root == null) return;
-    Deque<TreeNode> stack = new ArrayDeque<>();
-    stack.push(root);
-
-    while (!stack.isEmpty()) {
-        TreeNode node = stack.pop();
+```cpp
+void preorder(TreeNode* root) {
+    if (root == nullptr) return;
+    stack<TreeNode*> st;
+    st.push(root);
+    while (!st.empty()) {
+        TreeNode* node = st.top(); st.pop();
         visit(node);
-        if (node.right != null) stack.push(node.right);
-        if (node.left != null) stack.push(node.left);
+        if (node->right != nullptr) st.push(node->right);
+        if (node->left != nullptr) st.push(node->left);
     }
 }
 ```
@@ -310,7 +308,7 @@ flowchart LR
 
 **函数最后一步就是递归调用自身。**
 
-```java
+```cpp
 int factorialTail(int n, int acc) {
     if (n == 0) return acc;
     return factorialTail(n - 1, acc * n);
@@ -344,13 +342,14 @@ flowchart TD
 
 题型定位：树的递归定义。
 
-```java
+```cpp
 class Solution {
-    public int maxDepth(TreeNode root) {
-        if (root == null) return 0;
-        return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;
+public:
+    int maxDepth(TreeNode* root) {
+        if (root == nullptr) return 0;
+        return max(maxDepth(root->left), maxDepth(root->right)) + 1;
     }
-}
+};
 ```
 
 ```mermaid
@@ -373,16 +372,17 @@ flowchart TD
 
 题型定位：线性结构递归。
 
-```java
+```cpp
 class Solution {
-    public ListNode reverseList(ListNode head) {
-        if (head == null || head.next == null) return head;
-        ListNode newHead = reverseList(head.next);
-        head.next.next = head;
-        head.next = null;
+public:
+    ListNode* reverseList(ListNode* head) {
+        if (head == nullptr || head->next == nullptr) return head;
+        ListNode* newHead = reverseList(head->next);
+        head->next->next = head;
+        head->next = nullptr;
         return newHead;
     }
-}
+};
 ```
 
 ```mermaid
@@ -402,21 +402,20 @@ flowchart LR
 
 题型定位：用递归定义问题结构。
 
-```java
+```cpp
 class Solution {
-    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
-        if (list1 == null) return list2;
-        if (list2 == null) return list1;
-
-        if (list1.val < list2.val) {
-            list1.next = mergeTwoLists(list1.next, list2);
+public:
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+        if (list1 == nullptr) return list2;
+        if (list2 == nullptr) return list1;
+        if (list1->val < list2->val) {
+            list1->next = mergeTwoLists(list1->next, list2);
             return list1;
-        } else {
-            list2.next = mergeTwoLists(list1, list2.next);
-            return list2;
         }
+        list2->next = mergeTwoLists(list1, list2->next);
+        return list2;
     }
-}
+};
 ```
 
 ```mermaid
@@ -436,27 +435,33 @@ flowchart TD
 
 题型定位：分治。
 
-```java
+```cpp
 class Solution {
-    public int majorityElement(int[] nums) {
-        return divide(nums, 0, nums.length - 1);
+public:
+    int majorityElement(vector<int>& nums) {
+        return divide(nums, 0, static_cast<int>(nums.size()) - 1);
     }
 
-    private int divide(int[] nums, int left, int right) {
+private:
+    int divide(vector<int>& nums, int left, int right) {
         if (left == right) return nums[left];
-
         int mid = left + (right - left) / 2;
         int leftMajor = divide(nums, left, mid);
         int rightMajor = divide(nums, mid + 1, right);
-
         if (leftMajor == rightMajor) return leftMajor;
-
         int leftCount = count(nums, leftMajor, left, right);
         int rightCount = count(nums, rightMajor, left, right);
-
         return leftCount > rightCount ? leftMajor : rightMajor;
     }
-}
+
+    int count(const vector<int>& nums, int target, int left, int right) {
+        int cnt = 0;
+        for (int i = left; i <= right; ++i) {
+            if (nums[i] == target) ++cnt;
+        }
+        return cnt;
+    }
+};
 ```
 
 ```mermaid
@@ -493,7 +498,7 @@ flowchart TD
 
 例如裸递归斐波那契：
 
-```java
+```cpp
 int fib(int n) {
     if (n <= 1) return n;
     return fib(n - 1) + fib(n - 2);
