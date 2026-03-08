@@ -232,7 +232,12 @@ public:
             }
         }
         int minutes = 0;
-        vector<pair<int, int>> dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        vector<pair<int, int>> dirs = {
+            make_pair(1, 0),
+            make_pair(-1, 0),
+            make_pair(0, 1),
+            make_pair(0, -1)
+        };
         while (!q.empty() && fresh > 0) {
             int size = static_cast<int>(q.size());
             for (int i = 0; i < size; ++i) {
