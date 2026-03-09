@@ -16,7 +16,8 @@ tags: [machine-learning, model-tuning, hyperparameter, python, scikit-learn]
 2. 为什么调优会带来提升
 3. 常见调优方法有哪些
 4. 一个可以直接运行的 Python 最小示例
-5. 从入门到进阶的调优路线图
+5. 一个最简单的 LLM 调优 Python 示例
+6. 从入门到进阶的调优路线图
 
 ---
 
@@ -208,7 +209,117 @@ print(classification_report(y_test, y_pred))
 
 ---
 
-## 6. 从入门到进阶的建议路线
+## 6. 有没有简单的 LLM 调优例子？有。
+
+如果你说的“LLM 调优”是指让大语言模型更贴近你的任务，最常见做法是：
+
+- 不改全部参数（太贵）
+- 只训练一小部分新增参数（例如 LoRA）
+
+下面给一个**教学版最小示例**，用很小的模型跑通流程。
+
+### 6.1 安装依赖
+
+```bash
+pip install transformers datasets peft accelerate torch
+```
+
+### 6.2 最小 LoRA 微调示例（可直接改造成你的数据）
+
+```python
+import torch
+from datasets import Dataset
+from transformers import (
+    AutoTokenizer,
+    AutoModelForCausalLM,
+    DataCollatorForLanguageModeling,
+    Trainer,
+    TrainingArguments,
+)
+from peft import LoraConfig, get_peft_model
+
+# 1) 用一个很小的演示模型，方便本地快速跑通
+model_name = "sshleifer/tiny-gpt2"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+if tokenizer.pad_token is None:
+    tokenizer.pad_token = tokenizer.eos_token
+
+base_model = AutoModelForCausalLM.from_pretrained(model_name)
+
+# 2) 配置 LoRA：只训练少量低秩参数
+lora_config = LoraConfig(
+    r=8,
+    lora_alpha=16,
+    lora_dropout=0.05,
+    bias="none",
+    task_type="CAUSAL_LM",
+)
+model = get_peft_model(base_model, lora_config)
+model.print_trainable_parameters()
+
+# 3) 构造超小训练集（演示用）
+texts = [
+    "问题：什么是模型调优？\n回答：模型调优是调整超参数与训练策略，让模型泛化更好。",
+    "问题：为什么要做 LoRA？\n回答：LoRA 可以用更低显存完成大模型任务适配。",
+    "问题：过拟合是什么意思？\n回答：训练集表现很好，但测试集表现变差。",
+]
+dataset = Dataset.from_dict({"text": texts})
+
+def tokenize_fn(example):
+    out = tokenizer(
+        example["text"],
+        truncation=True,
+        max_length=128,
+        padding="max_length",
+    )
+    out["labels"] = out["input_ids"].copy()
+    return out
+
+tokenized = dataset.map(tokenize_fn)
+
+# 4) 训练参数（演示：只跑很少步）
+args = TrainingArguments(
+    output_dir="./tiny-lora-out",
+    per_device_train_batch_size=2,
+    num_train_epochs=3,
+    learning_rate=2e-4,
+    logging_steps=1,
+    save_strategy="no",
+    report_to="none",
+    fp16=torch.cuda.is_available(),
+)
+
+trainer = Trainer(
+    model=model,
+    args=args,
+    train_dataset=tokenized,
+    data_collator=DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False),
+)
+
+trainer.train()
+model.save_pretrained("./tiny-lora-adapter")
+tokenizer.save_pretrained("./tiny-lora-adapter")
+
+print("训练完成，LoRA 适配器已保存到 ./tiny-lora-adapter")
+```
+
+### 6.3 如何理解这个示例
+
+这个例子核心目的是帮你理解 LLM 调优最小闭环：
+
+1. 选基座模型（base model）
+2. 选参数高效微调方法（LoRA）
+3. 准备指令数据
+4. 训练并保存 adapter
+
+注意：
+
+- 这里的数据量极小，只用于教学，不代表真实效果。
+- 真正项目通常要更干净的数据、更严格的验证集评估。
+
+---
+
+## 7. 从入门到进阶的建议路线
 
 如果你刚开始，可以按这个顺序：
 
@@ -227,7 +338,7 @@ print(classification_report(y_test, y_pred))
 
 ---
 
-## 7. 一句话总结
+## 8. 一句话总结
 
 **模型调优，不是“玄学调参”，而是一个可重复、可验证的实验过程。**
 
