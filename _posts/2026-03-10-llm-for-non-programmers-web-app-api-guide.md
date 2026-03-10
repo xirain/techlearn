@@ -193,6 +193,7 @@ flowchart TD
 | 字节跳动 | 豆包等 | https://www.doubao.com/ | 大众产品普及快 |
 | 智谱 AI | GLM 系列 | https://www.zhipuai.cn/ | 开发者与企业场景活跃 |
 | 月之暗面 | Kimi | https://kimi.moonshot.cn/ | 长文本阅读与整理知名 |
+| MiniMax | MiniMax / 海螺AI | https://www.minimaxi.com/ | 在多模态与应用产品化方面较活跃 |
 | 腾讯 | 混元 | https://hunyuan.tencent.com/ | ToB 生态推进较多 |
 | 科大讯飞 | 讯飞星火 | https://xinghuo.xfyun.cn/ | 教育与办公场景结合深 |
 
