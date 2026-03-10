@@ -3,6 +3,7 @@ title: 非程序员也能看懂的大模型使用指南：Web／App 免费用，
 description: 面向非程序员，系统介绍大模型的三种使用方式、Web 与 App 的免费逻辑、API 计费原因与常见厂商清单。
 date: 2026-03-10
 categories: [人工智能]
+mermaid: true
 tags: [llm, ai, chatgpt, deepseek, kimi, claude, api, siliconflow, cherrystudio]
 ---
 
