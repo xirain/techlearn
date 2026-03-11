@@ -107,6 +107,74 @@ FasterWhisper 在第一次加载模型时会下载权重，常见型号：
 - 没有 NVIDIA GPU：先走 CPU（`compute_type="int8"` 常见）；
 - 有 NVIDIA GPU：优先 `float16`（速度和效果通常更平衡）。
 
+### 3.4 GPU 方式部署（CUDA）
+
+如果你准备用 GPU 跑 FasterWhisper，建议先确认三件事：
+
+- `nvidia-smi` 能正常看到显卡；
+- Python 环境里的 `ctranslate2` 与 CUDA 版本兼容；
+- 推理时使用 `device="cuda"` 与 `compute_type="float16"`。
+
+最小验证代码：
+
+```python
+from faster_whisper import WhisperModel
+
+model = WhisperModel("medium", device="cuda", compute_type="float16")
+segments, info = model.transcribe("demo.wav", language="zh", vad_filter=True)
+
+print(info.language, info.language_probability)
+for seg in segments:
+    print(f"[{seg.start:.2f}-{seg.end:.2f}] {seg.text}")
+```
+
+如果你遇到 CUDA 相关报错（如找不到动态库），通常是驱动、CUDA Runtime 或 ctranslate2 版本不匹配造成的，建议优先对齐版本再排查代码。
+
+### 3.5 从 Hugging Face 下载模型（离线/内网常用）
+
+默认情况下，`WhisperModel("medium")` 会自动下载模型；但在企业内网、离线机房或需要缓存复用时，更推荐手动先下载。
+
+先安装下载工具：
+
+```bash
+pip install huggingface_hub
+```
+
+然后用 `snapshot_download` 拉取模型到本地目录：
+
+```python
+from huggingface_hub import snapshot_download
+
+local_dir = snapshot_download(
+    repo_id="Systran/faster-whisper-medium",
+    local_dir="./models/faster-whisper-medium",
+    local_dir_use_symlinks=False,
+)
+
+print("model dir:", local_dir)
+```
+
+下载完成后，直接把本地路径传给 `WhisperModel`：
+
+```python
+from faster_whisper import WhisperModel
+
+model = WhisperModel(
+    "./models/faster-whisper-medium",
+    device="cuda",
+    compute_type="float16",
+)
+```
+
+常见模型仓库命名示例：
+
+- `Systran/faster-whisper-tiny`
+- `Systran/faster-whisper-small`
+- `Systran/faster-whisper-medium`
+- `Systran/faster-whisper-large-v3`
+
+如果你需要完全离线运行，可以在联网机器先下载模型目录，再整体拷贝到目标机器，并通过“本地路径加载”方式使用。
+
 ---
 
 ## 四、命令行使用：先把任务跑通
@@ -152,7 +220,11 @@ if __name__ == "__main__":
 运行：
 
 ```bash
+# CPU
 python transcribe_cli.py ./demo.wav --model medium --device cpu --compute_type int8 --language zh
+
+# GPU
+python transcribe_cli.py ./demo.wav --model medium --device cuda --compute_type float16 --language zh
 ```
 
 这一步的目标是：**确认模型、音频解码、语言设置都正常**。
