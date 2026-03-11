@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent · ReAct 工作流动画演示</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #f0f4fa 0%, #e6ecf5 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+        .card {
+            max-width: 750px;
+            width: 100%;
+            background: rgba(255,255,255,0.75);
+            backdrop-filter: blur(6px);
+            border-radius: 2.5rem;
+            box-shadow: 0 25px 45px -12px rgba(0,20,40,0.35), inset 0 1px 2px rgba(255,255,255,0.6);
+            padding: 2rem 1.8rem 2rem 1.8rem;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        h1 {
+            font-size: 1.9rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin: 0 0 0.25rem 0;
+            background: linear-gradient(135deg, #1A2F4F, #2C3E6E);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            font-size: 0.95rem;
+            color: #3a4f6d;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #5b8cbf;
+            padding-left: 1rem;
+            background: rgba(255,255,255,0.5);
+            border-radius: 0 8px 8px 0;
+        }
+        /* 图例 */
+        .legend {
+            display: flex;
+            gap: 1.8rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            background: rgba(230, 240, 255, 0.7);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            backdrop-filter: blur(2px);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 30px;
+        }
+        .dot.llm { background: #FCE7B4; border: 2px solid #D99E3B; }
+        .dot.code { background: #B5D8FF; border: 2px solid #2A6EB0; }
+        .dot.user { background: #D9D9D9; border: 2px solid #5F5F5F; }
+        .chat-container {
+            background: rgba(255,255,255,0.5);
+            border-radius: 1.8rem;
+            padding: 1.6rem 1.2rem;
+            height: 440px;
+            overflow-y: auto;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.03), 0 8px 18px rgba(46, 65, 98, 0.1);
+            scroll-behavior: smooth;
+            margin-bottom: 1.6rem;
+        }
+        /* 消息通用样式 */
+        .message {
+            display: flex;
+            margin-bottom: 1.3rem;
+            align-items: flex-start;
+            animation: appear 0.4s cubic-bezier(0.2, 0.9, 0.3, 1);
+            gap: 12px;
+        }
+        @keyframes appear {
+            0% { opacity: 0; transform: translateY(16px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 42px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            flex-shrink: 0;
+            border: 2px solid rgba(0,0,0,0.05);
+        }
+        .bubble {
+            padding: 0.9rem 1.4rem;
+            border-radius: 1.5rem 1.5rem 1.5rem 0.3rem;
+            max-width: calc(100% - 60px);
+            line-height: 1.5;
+            font-size: 0.98rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        /* 角色变体 */
+        .user .bubble {
+            background: #eaeef3;
+            color: #1d2b3f;
+            border-bottom-left-radius: 1.5rem;
+            border: 1px solid #c0cbd8;
+        }
+        .assistant .bubble {
+            background: #FCE7B4;  /* 暖色: LLM 控制 */
+            color: #2f2a1f;
+            border: 1px solid #e0b85c;
+        }
+        .tool .bubble {
+            background: #B5D8FF;  /* 冷色: 确定性代码 */
+            color: #10345e;
+            border: 1px solid #5f8fd3;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+        }
+        .user .avatar { background: #cddae9; }
+        .assistant .avatar { background: #fbdd9b; }
+        .tool .avatar { background: #b2ccf0; }
+
+        /* 标签小标记 */
+        .role-tag {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            background: rgba(0,0,0,0.05);
+            padding: 0.15rem 0.7rem;
+            border-radius: 30px;
+            margin-bottom: 6px;
+            width: fit-content;
+        }
+        .assistant .role-tag { background: #D9A341; color: #1f1a0e; }
+        .tool .role-tag { background: #3670b3; color: white; }
+        .user .role-tag { background: #7f8c9e; color: white; }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        button {
+            background: white;
+            border: none;
+            padding: 0.9rem 2.2rem;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1f3a5f;
+            box-shadow: 0 8px 18px rgba(23, 45, 78, 0.1), 0 2px 4px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            border: 1px solid rgba(255,255,255,0.7);
+            flex: 0 1 auto;
+        }
+        button:hover {
+            background: #f5faff;
+            box-shadow: 0 12px 24px rgba(26, 55, 94, 0.18);
+            transform: scale(1.02);
+            border-color: #a6c1e2;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        button:disabled {
+            opacity: 0.4;
+            pointer-events: none;
+            filter: grayscale(0.5);
+        }
+        .reset-btn {
+            background: #ecf2fa;
+            color: #2c3e5c;
+        }
+        .footer-note {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            text-align: center;
+            color: #43628b;
+            background: rgba(255,255,255,0.5);
+            padding: 0.7rem 1rem;
+            border-radius: 50px;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .badge::before {
+            content: "⚙️";
+            font-size: 1.1rem;
+        }
+        .badge.free::before {
+            content: "🧠";
+        }
+        hr {
+            border: 1px solid rgba(91, 130, 186, 0.2);
+            margin: 1rem 0;
+        }
+        .example-hint {
+            font-size: 0.8rem;
+            color: #32608f;
+            background: #e1ecfe;
+            border-radius: 30px;
+            padding: 0.3rem 1.2rem;
+            display: inline-block;
+            margin-bottom: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>🤖 AI Agent · ReAct 内部循环</h1>
+    <div class="subtitle">写死的代码骨架 与 LLM 自由控制 的协作</div>
+
+    <!-- 图例 -->
+    <div class="legend">
+        <div class="legend-item"><span class="dot llm"></span> <strong>LLM 控制</strong> (思考·行动·答案)</div>
+        <div class="legend-item"><span class="dot code"></span> <strong>代码确定性</strong> (工具·解析·循环)</div>
+        <div class="legend-item"><span class="dot user"></span> 用户输入</div>
+    </div>
+
+    <!-- 聊天窗口：动态插入消息 -->
+    <div id="chatWindow" class="chat-container">
+        <!-- 消息将通过JS动态渲染 -->
+    </div>
+
+    <!-- 控制按钮组 -->
+    <div class="controls">
+        <button id="nextBtn" class="next-btn">▶ 下一步</button>
+        <button id="resetBtn" class="reset-btn">↺ 重置流程</button>
+    </div>
+
+    <!-- 底层提示：哪些部分写死/自由 -->
+    <div class="footer-note">
+        <span class="badge free">🧠 LLM 自由产生：Thought / Action / Answer</span>
+        <span class="badge">⚙️ 代码写死：解析指令·调用工具·循环控制</span>
+    </div>
+    <div class="example-hint">
+        ⚡ 当前演示问题: “现在几点？顺便计算 (3+5)*2”
+    </div>
+</div>
+
+<script>
+    (function() {
+        // --- 预定义消息序列 (完全符合 ReAct 模式) ---
+        const messages = [
+            // 0: 用户输入 (自由提问)
+            { role: 'user', content: '现在几点？顺便计算 (3+5)*2', avatar: '👤' },
+
+            // 1: LLM 第一次思考 + 行动 (调用时间工具)
+            { role: 'assistant', content: 'Thought: 用户想知道当前时间，还需要计算表达式。\n我先获取时间。\nAction: get_current_time\nAction Input: ', avatar: '🧠' },
+
+            // 2: 代码解析 & 工具执行 (确定性) — 用 tool 角色表示观察结果
+            { role: 'tool', content: 'Observation: 2025-03-21 15:30:00', avatar: '⚙️' },
+
+            // 3: LLM 第二次思考 + 下一个行动 (调用计算器)
+            { role: 'assistant', content: 'Thought: 时间已拿到，现在需要计算 (3+5)*2。\nAction: calculator\nAction Input: (3+5)*2', avatar: '🧠' },
+
+            // 4: 工具执行返回计算结果
+            { role: 'tool', content: 'Observation: 16', avatar: '⚙️' },
+
+            // 5: LLM 整合信息，输出最终答案
+            { role: 'assistant', content: 'Thought: 所有信息齐备。\nAnswer: 当前时间是 2025-03-21 15:30:00，计算结果为 16。', avatar: '🧠' }
+        ];
+
+        // DOM 元素
+        const chatWindow = document.getElementById('chatWindow');
+        const nextBtn = document.getElementById('nextBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        // 当前已显示的消息索引 (从 -1 开始，表示未显示任何消息)
+        let currentIndex = -1;
+
+        // 清空聊天窗口
+        function clearChat() {
+            chatWindow.innerHTML = '';
+        }
+
+        // 根据 role 获取额外的类名和 avatar 表情 (也可以在消息中定义)
+        function getAvatar(role, defaultEmoji) {
+            if (role === 'user') return '👤';
+            if (role === 'assistant') return '🧠';
+            if (role === 'tool') return '🔧';
+            return defaultEmoji;
+        }
+
+        // 渲染单条消息 (追加到容器)
+        function appendMessage(messageObj) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${messageObj.role}`;
+
+            // 头像
+            const avatarDiv = document.createElement('div');
+            avatarDiv.className = 'avatar';
+            avatarDiv.textContent = messageObj.avatar || (messageObj.role === 'user' ? '👤' : messageObj.role === 'assistant' ? '🧠' : '🔧');
+            msgDiv.appendChild(avatarDiv);
+
+            // 气泡
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'bubble';
+
+            // 增加一个小标签 (角色标识)
+            const tagSpan = document.createElement('div');
+            tagSpan.className = 'role-tag';
+            if (messageObj.role === 'user') tagSpan.textContent = '用户提问';
+            else if (messageObj.role === 'assistant') tagSpan.textContent = '🧠 LLM 生成';
+            else if (messageObj.role === 'tool') tagSpan.textContent = '⚙️ 代码工具 · 确定性';
+            bubbleDiv.appendChild(tagSpan);
+
+            // 消息内容 (保留换行)
+            const contentP = document.createElement('div');
+            contentP.style.whiteSpace = 'pre-wrap';
+            contentP.textContent = messageObj.content;
+            bubbleDiv.appendChild(contentP);
+
+            msgDiv.appendChild(bubbleDiv);
+            chatWindow.appendChild(msgDiv);
+
+            // 自动滚动到底部
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        // 显示下一条消息 (如果还有)
+        function showNextMessage() {
+            if (currentIndex + 1 < messages.length) {
+                currentIndex++;
+                appendMessage(messages[currentIndex]);
+                // 如果已经到最后一条，禁用下一步按钮
+                if (currentIndex === messages.length - 1) {
+                    nextBtn.disabled = true;
+                }
+            } else {
+                nextBtn.disabled = true;
+            }
+        }
+
+        // 重置流程：清空聊天，重置索引，并显示第一条消息(用户)
+        function resetChat() {
+            clearChat();
+            currentIndex = -1;
+            // 启用下一步按钮 (如果消息数组不为空)
+            nextBtn.disabled = false;
+            // 可选：自动展示第一条消息，让流程从最开始开始。但为了符合“一步一步”，我们让用户点击“下一步”显示第一条
+            // 为了更好的体验，重置后直接显示第一条消息（用户提问）也可以。这里选择重置后不自动显示，而是等待点击下一步
+            // 但大多数用户期望重置后能看到第一步。我们采用重置后立即显示第一条（用户），然后索引为0，不禁用按钮（因为还有后续）
+            // 这样更直观：重置后立刻看到用户提问。
+            if (messages.length > 0) {
+                appendMessage(messages[0]);  // 显示用户消息
+                currentIndex = 0;
+                // 如果只有一条消息，那之后禁用，但这里显然不止一条，不禁用
+                if (currentIndex === messages.length - 1) {
+                    nextBtn.disabled = true;
+                } else {
+                    nextBtn.disabled = false;
+                }
+            }
+        }
+
+        // 事件绑定
+        nextBtn.addEventListener('click', showNextMessage);
+
+        resetBtn.addEventListener('click', function() {
+            resetChat();
+        });
+
+        // 页面初始化: 清空，然后显示第一条消息（用户提问），使界面一开始就有内容
+        window.addEventListener('load', () => {
+            // 完全重置到初始状态
+            clearChat();
+            currentIndex = -1;
+            // 显示第一条消息
+            if (messages.length > 0) {
+                appendMessage(messages[0]);
+                currentIndex = 0;
+                if (currentIndex === messages.length - 1) {
+                    nextBtn.disabled = true;
+                } else {
+                    nextBtn.disabled = false;
+                }
+            }
+        });
+
+        // 附加：为了更清晰，在工具消息中我们额外显示“解析&执行”的提示，但已经在消息里写了 Observation
+        // 也可以增加一个小细节：在 tool 消息上方增加“代码解析 Action: ……”但为了简洁保持原样
+
+    })();
+</script>
+
+<!-- 额外注解：说明每个部分的设计 -->
+<div style="max-width:750px; margin: 1rem auto 0; text-align: left; font-size:0.85rem; color: #2b4a73; background: #dbe9fe; padding: 0.8rem 2rem; border-radius: 50px;">
+    💡 每点一次「下一步」推进一个环节：<strong>黄色气泡</strong> = LLM 自由生成（思考/行动/答案）；<strong>蓝色气泡</strong> = 代码固定执行（工具调用结果、解析动作）。灰色虚线框内为写死的循环与解析逻辑——你看不见它们，但它们始终在背后驱动。
+</div>
+</body>
+</html>
