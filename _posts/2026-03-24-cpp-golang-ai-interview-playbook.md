@@ -4,6 +4,7 @@ description: 面向传统 C++ 开发者，系统梳理现代 C++、Golang 高并
 date: 2026-03-24
 categories: [面试]
 tags: [c++, modern-c++, golang, ai, mcp, agent, skill, llm, 并发, 测试]
+mermaid: true
 ---
 
 很多传统 C++ 程序员在面试时会遇到一个尴尬点：

@@ -4,6 +4,7 @@ description: 面向 C++ 工程师的系统化面试指南，覆盖现代 C++、G
 date: 2026-03-24
 categories: [面试]
 tags: [c++, modern-c++, golang, ai, mcp, agent, skill, llm, testing, concurrency]
+mermaid: true
 ---
 
 很多传统 C++ 程序员在面试时会遇到一个新现实：
