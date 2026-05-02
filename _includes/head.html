@@ -70,6 +70,21 @@
     {{- site.title -}}
   </title>
 
+  <script>
+    (() => {
+      const key = 'reader-theme';
+      let stored = null;
+
+      try {
+        stored = localStorage.getItem(key);
+      } catch (err) {
+        stored = null;
+      }
+
+      document.documentElement.dataset.readerTheme = stored || 'typography';
+    })();
+  </script>
+
   {% include_cached favicons.html %}
 
   <!-- Resource Hints -->
@@ -119,6 +134,7 @@
   <!-- Scripts -->
 
   <script src="{{ '/assets/js/dist/theme.min.js' | relative_url }}"></script>
+  <script defer src="{{ '/assets/js/reader-theme-toggle.js' | relative_url }}"></script>
 
   {% include js-selector.html lang=lang %}
 

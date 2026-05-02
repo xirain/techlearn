@@ -308,9 +308,104 @@ button {
   border-radius: var(--tl-radius);
 }
 
+#reader-theme-toggle[aria-pressed="true"] {
+  color: var(--tl-accent);
+}
+
+html[data-reader-theme="classic"]:not([data-mode]),
+html[data-reader-theme="classic"][data-mode="light"] {
+  --main-bg: #EFF1F5;
+  --mask-bg: #DCE0E8;
+  --main-border-color: #CCD0DA;
+  --text-color: #4C4F69;
+  --text-muted-color: #6C6F85;
+  --heading-color: #4C4F69;
+  --link-color: #1E66F5;
+  --sidebar-bg: #E6E9EF;
+  --card-bg: #EFF1F5;
+  --card-hover-bg: #DCE0E8;
+  --toc-highlight: #1E66F5;
+}
+
+html[data-reader-theme="classic"][data-mode="dark"] {
+  --main-bg: #1E1E2E;
+  --mask-bg: #313244;
+  --main-border-color: #45475A;
+  --text-color: #CDD6F4;
+  --text-muted-color: #A6ADC8;
+  --heading-color: #CDD6F4;
+  --link-color: #89B4FA;
+  --sidebar-bg: #181825;
+  --card-bg: #1E1E2E;
+  --card-hover-bg: #313244;
+  --toc-highlight: #89B4FA;
+}
+
+html[data-reader-theme="classic"] body,
+html[data-reader-theme="classic"] .post-content,
+html[data-reader-theme="classic"] #post-list .post-preview h1,
+html[data-reader-theme="classic"] #post-list .post-preview h2,
+html[data-reader-theme="classic"] #post-list .post-preview .card-title,
+html[data-reader-theme="classic"] #post h1,
+html[data-reader-theme="classic"] #page h1,
+html[data-reader-theme="classic"] #sidebar .site-title {
+  font-family: var(--tl-ui-font);
+}
+
+html[data-reader-theme="classic"] #post-list,
+html[data-reader-theme="classic"] #post,
+html[data-reader-theme="classic"] #page {
+  max-width: none;
+}
+
+html[data-reader-theme="classic"] #post-list .card-wrapper {
+  overflow: visible;
+  border-color: transparent;
+  background: transparent;
+  transform: none;
+}
+
+html[data-reader-theme="classic"] #post-list .card-wrapper::before,
+html[data-reader-theme="classic"] .post-content h2::before {
+  display: none;
+}
+
+html[data-reader-theme="classic"] #post-list .post-preview {
+  padding: 0.75rem 0;
+}
+
+html[data-reader-theme="classic"] #post-list .post-preview h1,
+html[data-reader-theme="classic"] #post-list .post-preview h2,
+html[data-reader-theme="classic"] #post-list .post-preview .card-title {
+  font-size: 1.25rem;
+}
+
+html[data-reader-theme="classic"] #post h1,
+html[data-reader-theme="classic"] #page h1 {
+  font-size: 2rem;
+}
+
+html[data-reader-theme="classic"] .post-content {
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+html[data-reader-theme="classic"] .post-content h2 {
+  border-bottom: none;
+}
+
+html[data-reader-theme="classic"] .post-content blockquote {
+  border-left-color: var(--blockquote-border-color);
+  background: transparent;
+}
+
 @media (min-width: 1200px) {
   .post-content {
     font-size: 1.07rem;
+  }
+
+  html[data-reader-theme="classic"] .post-content {
+    font-size: 1rem;
   }
 }
 
