@@ -308,7 +308,25 @@ button {
   border-radius: var(--tl-radius);
 }
 
+#reader-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  margin-left: 0.35rem;
+  padding: 0;
+  border: 1px solid var(--main-border-color);
+  border-radius: 999px;
+  background: var(--card-bg);
+  color: var(--text-muted-color);
+  line-height: 1;
+  vertical-align: middle;
+}
+
+#reader-theme-toggle:hover,
 #reader-theme-toggle[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--tl-accent) 12%, var(--card-bg));
   color: var(--tl-accent);
 }
 
